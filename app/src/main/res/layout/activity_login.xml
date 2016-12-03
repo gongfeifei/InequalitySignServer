@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.LoginActivity">
+    <TextView
+        android:background="#06c1ae"
+        android:textSize="20sp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="账号登录"
+        android:gravity="center"
+        android:textColor="@android:color/white" />
+    <LinearLayout
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:gravity="bottom"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="用户名"
+            android:textSize="18sp"
+            android:layout_weight="1"
+            android:gravity="center"/>
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="请输入手机号"
+            android:id="@+id/EtLoginName"
+            android:textStyle="italic"
+            android:layout_weight="2"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_weight="2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_margin="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_gravity="center_vertical"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="登录密码"
+                android:textSize="18sp"
+                android:layout_weight="1"
+                android:gravity="center"/>
+            <RelativeLayout
+                android:layout_weight="2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/EtLoginPwd"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="请输入密码"
+                    android:textStyle="italic"
+                    android:inputType="textPassword" />
+                <ImageButton
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_alignParentRight="true"
+                    android:id="@+id/IBtnLoginSwitch"
+                    android:layout_alignBottom="@+id/EtLoginPwd"
+                    android:background="@drawable/hidepwd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>
+
+        </LinearLayout>
+        <CheckBox
+            android:layout_marginLeft="60dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="记住用户名和密码"
+            android:id="@+id/CbLoginRemember"
+            android:textStyle="bold"
+            android:textColor="#06c1ae"/>
+        <Button
+            android:layout_margin="50dp"
+            android:textSize="20sp"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="登录"
+            android:background="@drawable/shape"
+            android:textColor="@android:color/white"
+            android:id="@+id/BtnLogin"/>
+
+    </LinearLayout>
+
+</LinearLayout>
+

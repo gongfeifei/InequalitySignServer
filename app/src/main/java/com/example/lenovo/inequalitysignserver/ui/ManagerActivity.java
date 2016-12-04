@@ -2,6 +2,7 @@ package com.example.lenovo.inequalitysignserver.ui;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -9,6 +10,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -23,6 +25,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.lenovo.inequalitysignserver.R;
 
@@ -52,6 +55,11 @@ public class ManagerActivity extends AppCompatActivity {
     private TextView mTvType;
     private TextView mTvAddress;
     private TextView mTvTel;
+    private String[] types = new String[]{"美食", "火锅", "海鲜", "自助餐", "冀菜", "鲁菜",
+            "川菜", "粤菜", "湘菜", "北京菜", "西北菜", "东北菜", "清真", "烧烤", "韩国料理",
+            "中餐", "西餐", "快餐", "甜点"};
+
+    private RadioOnClick radioOnClick = new RadioOnClick(0);
     private View.OnClickListener mOClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -65,6 +73,12 @@ public class ManagerActivity extends AppCompatActivity {
                     startActivity(intent);
                     break;
                 case R.id.LlayManagerType:
+//                    Toast.makeText(ManagerActivity.this, "选择商家类型", Toast.LENGTH_SHORT).show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ManagerActivity.this)
+                            .setTitle("选择商家类型").setSingleChoiceItems(types,
+                                    radioOnClick.getIndex(), radioOnClick);
+                    builder.create();
+                    builder.show();
                     break;
                 case R.id.LlayManagerAddress:
                     intent.setClass(ManagerActivity.this, ManagerAddressActivity.class);
@@ -256,7 +270,7 @@ public class ManagerActivity extends AppCompatActivity {
     private void findView() {
         mRlayHead = (RelativeLayout) findViewById(R.id.RlayManagerHead);
         mLlayName = (LinearLayout) findViewById(R.id.LlayManagerName);
-        mLlayType = (LinearLayout) findViewById(R.id.LlayManagerName);
+        mLlayType = (LinearLayout) findViewById(R.id.LlayManagerType);
         mLlayAddress = (LinearLayout) findViewById(R.id.LlayManagerAddress);
         mLlayTel = (LinearLayout) findViewById(R.id.LlayManagerTel);
         mIvHead = (ImageView) findViewById(R.id.IvManagerHead);
@@ -265,5 +279,32 @@ public class ManagerActivity extends AppCompatActivity {
         mTvAddress = (TextView) findViewById(R.id.TvManagerAddress);
         mTvTel = (TextView) findViewById(R.id.TvManagerTel);
         mIBtnBack = (ImageButton) findViewById(R.id.IBtnManagerBack);
+    }
+
+    /**
+     * 点击单选框事件
+     */
+    class RadioOnClick implements DialogInterface.OnClickListener{
+        private int index;
+
+        public RadioOnClick(int index) {
+            this.index = index;
+        }
+
+        public int getIndex() {
+            return index;
+        }
+
+        public void setIndex(int index) {
+            this.index = index;
+        }
+
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            setIndex(which);
+            Toast.makeText(ManagerActivity.this, "您选择了：" + index + ":" + types[index],
+                    Toast.LENGTH_SHORT).show();
+            dialog.dismiss();
+        }
     }
 }

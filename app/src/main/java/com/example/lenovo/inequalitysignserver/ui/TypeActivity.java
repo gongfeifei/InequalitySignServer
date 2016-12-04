@@ -57,7 +57,6 @@ public class TypeActivity extends AppCompatActivity {
     private TextView mTvDelete;
     private PopupWindow popupWindow;
     private View parentView;
-    private int i;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +75,7 @@ public class TypeActivity extends AppCompatActivity {
         mIBtnCancel.setOnClickListener(mOClickListener);
         mLvType.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
                 popupWindow.showAtLocation(parentView, Gravity.CENTER, 0, 0);
                 //popupWindow在弹窗的时候背景半透明
                 final WindowManager.LayoutParams params = getWindow().getAttributes();
@@ -92,7 +91,7 @@ public class TypeActivity extends AppCompatActivity {
                 mTvDelete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        data.remove(i);
+                        data.remove(position);
                         mLvType.setAdapter(adapter);
                         popupWindow.dismiss();
                     }

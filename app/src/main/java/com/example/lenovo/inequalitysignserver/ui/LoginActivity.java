@@ -1,6 +1,8 @@
 package com.example.lenovo.inequalitysignserver.ui;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Selection;
@@ -31,8 +33,10 @@ public class LoginActivity extends AppCompatActivity {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.BtnLogin:
+                    saveAccount();
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
+                    finish();
 //                    Intent intent = new Intent(LoginActivity.this, CheckActivity.class);
 //                    intent.putExtra("NAME", mEtName.getText().toString());
 //                    intent.putExtra("PWD", mEtPwd.getText().toString());
@@ -63,6 +67,8 @@ public class LoginActivity extends AppCompatActivity {
                         Spannable spannable = (Spannable) charSequence;
                         Selection.setSelection(spannable, charSequence.length());
                     }
+                    break;
+
             }
         }
     };
@@ -88,6 +94,14 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    private void saveAccount() {
+        SharedPreferences spf = getSharedPreferences("Account", Context.MODE_APPEND);
+        SharedPreferences.Editor editor = spf.edit();
+        editor.putString("NAME", mEtName.getText().toString());
+        editor.putString("PWD", mEtPwd.getText().toString());
+
+        editor.commit();
+    }
     private void setListener() {
         mBtnLogin.setOnClickListener(mOClickListener);
         mIBtnSwitch.setOnClickListener(mOClickListener);

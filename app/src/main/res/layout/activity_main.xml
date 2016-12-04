@@ -12,6 +12,13 @@
     android:orientation="vertical"
     tools:context=".ui.MainActivity">
 
+    <Button
+        android:id="@+id/BtnMainClick"
+        android:layout_marginTop="100dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/clicknum"
+        android:layout_width="300dp"
+        android:layout_height="300dp" />
     <com.example.lenovo.inequalitysignserver.widget.SatelliteMenu
         android:id="@+id/SatMenuMain"
         android:layout_width="wrap_content"

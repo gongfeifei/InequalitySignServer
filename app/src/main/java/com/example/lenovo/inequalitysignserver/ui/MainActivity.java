@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
         }
     };
     private SatelliteMenu mSatMenu;
+    private Button mBtnClick;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
 //        mBtnCall = (Button) findViewById(R.id.BtnMainCall);
 //        mBtnInquiry = (Button) findViewById(R.id.BtnMainInquiry);
         mSatMenu = (SatelliteMenu) findViewById(R.id.SatMenuMain);
+        mBtnClick = (Button) findViewById(R.id.BtnMainClick);
     }
 
 }

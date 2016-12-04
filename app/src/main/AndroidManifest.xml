@@ -28,7 +28,10 @@
         <activity android:name=".ui.ManagerAddressActivity" />
         <activity android:name=".ui.ManagerTelActivity" />
         <activity android:name=".ui.ClipImageActivity" />
-        <activity android:name=".ui.SettingActivity"></activity>
+        <activity android:name=".ui.SettingActivity" />
+        <activity android:name=".ui.SettingAboutActivity" />
+        <activity android:name=".ui.SettingNameActivity" />
+        <activity android:name=".ui.SettingPwdActivity"></activity>
     </application>
 
 </manifest>

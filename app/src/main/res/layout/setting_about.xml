@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f0f0f0"
+    android:orientation="vertical"
+    tools:context="com.example.lenovo.inequalitysignserver.ui.SettingAboutActivity">
+
+    <RelativeLayout
+        android:layout_marginBottom="10dp"
+        android:background="#06c1ae"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize">
+        <ImageButton
+            android:id="@+id/IBtnAboutBack"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/btn_back_white" />
+        <TextView
+            android:layout_centerInParent="true"
+            android:textSize="20sp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="关于"
+            android:gravity="center"
+            android:textColor="@android:color/white" />
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_weight="2"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+        <com.example.lenovo.inequalitysignserver.widget.CircleImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/logo"/>
+        <TextView
+            android:layout_margin="12dp"
+            android:textColor="@android:color/black"
+            android:textSize="30sp"
+            android:text="“不等号”商家端"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp" />
+        <TextView
+            android:textSize="18sp"
+            android:text="不用等号的APP"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp" />
+    </LinearLayout>
+    <TextView
+        android:padding="90dp"
+        android:textSize="18sp"
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        android:text="version 1.0 build fifi"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp" />
+</LinearLayout>

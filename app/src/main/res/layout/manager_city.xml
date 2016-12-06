@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="#f0f0f0"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:background="#06c1ae"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize">
+        <ImageButton
+            android:id="@+id/IBtnCityBack"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/btn_back_white" />
+        <TextView
+            android:layout_centerInParent="true"
+            android:textSize="20sp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="选择城市"
+            android:gravity="center"
+            android:textColor="@android:color/white" />
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ListView
+            android:choiceMode="singleChoice"
+            android:listSelector="@android:color/white"
+            android:background="#f0f0f0"
+            android:layout_weight="1"
+            android:id="@+id/LvProvince"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"></ListView>
+        <ListView
+            android:background="@android:color/white"
+            android:layout_weight="2"
+            android:id="@+id/LvCity"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"></ListView>
+    </LinearLayout>
+
+</LinearLayout>

@@ -80,6 +80,10 @@ public class ManagerActivity extends AppCompatActivity {
                     builder.create();
                     builder.show();
                     break;
+                case R.id.LlayManagerCity:
+                    intent.setClass(ManagerActivity.this, ManagerCityActivity.class);
+                    startActivity(intent);
+                    break;
                 case R.id.LlayManagerAddress:
                     intent.setClass(ManagerActivity.this, ManagerAddressActivity.class);
                     startActivity(intent);
@@ -95,6 +99,8 @@ public class ManagerActivity extends AppCompatActivity {
         }
     };
     private ImageButton mIBtnBack;
+    private LinearLayout mLlayCity;
+    private TextView mTvCity;
 
     /**
      * 上传头像
@@ -262,6 +268,7 @@ public class ManagerActivity extends AppCompatActivity {
         mRlayHead.setOnClickListener(mOClickListener);
         mLlayName.setOnClickListener(mOClickListener);
         mLlayType.setOnClickListener(mOClickListener);
+        mLlayCity.setOnClickListener(mOClickListener);
         mLlayAddress.setOnClickListener(mOClickListener);
         mLlayTel.setOnClickListener(mOClickListener);
         mIBtnBack.setOnClickListener(mOClickListener);
@@ -271,11 +278,13 @@ public class ManagerActivity extends AppCompatActivity {
         mRlayHead = (RelativeLayout) findViewById(R.id.RlayManagerHead);
         mLlayName = (LinearLayout) findViewById(R.id.LlayManagerName);
         mLlayType = (LinearLayout) findViewById(R.id.LlayManagerType);
+        mLlayCity = (LinearLayout) findViewById(R.id.LlayManagerCity);
         mLlayAddress = (LinearLayout) findViewById(R.id.LlayManagerAddress);
         mLlayTel = (LinearLayout) findViewById(R.id.LlayManagerTel);
         mIvHead = (ImageView) findViewById(R.id.IvManagerHead);
         mTvName = (TextView) findViewById(R.id.TvManagerName);
         mTvType = (TextView) findViewById(R.id.TvManagerType);
+        mTvCity = (TextView) findViewById(R.id.TvManagerCity);
         mTvAddress = (TextView) findViewById(R.id.TvManagerAddress);
         mTvTel = (TextView) findViewById(R.id.TvManagerTel);
         mIBtnBack = (ImageButton) findViewById(R.id.IBtnManagerBack);

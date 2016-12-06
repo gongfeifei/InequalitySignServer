@@ -41,7 +41,7 @@
         android:layout_height="wrap_content">
         <EditText
             android:id="@+id/EtEditAddress"
-            android:hint="请输入所在地址"
+            android:hint="点击右侧图标定位"
             android:padding="10dp"
             android:layout_width="match_parent"
             android:layout_height="50dp"

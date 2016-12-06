@@ -71,7 +71,7 @@
                     android:layout_alignParentRight="true"
                     android:id="@+id/IBtnLoginSwitch"
                     android:layout_alignBottom="@+id/EtLoginPwd"
-                    android:background="@drawable/hidepwd"
+                    android:background="@android:color/transparent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
             </RelativeLayout>

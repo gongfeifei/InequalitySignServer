@@ -18,7 +18,7 @@ public class SettingPwdActivity extends AppCompatActivity {
 
     private ImageButton mIBtnBack;
     private EditText mEtOldpwd;
-    private EditText mEtNwepwd;
+    private EditText mEtNewpwd;
     private CheckBox mCbShow;
     private Button mBtnSave;
     private View.OnClickListener mOClickListener = new View.OnClickListener() {
@@ -32,21 +32,21 @@ public class SettingPwdActivity extends AppCompatActivity {
                     if (mCbShow.isChecked()) {
                         //设置EditText文本为可见的
                         mEtOldpwd.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-                        mEtNwepwd.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                        mEtNewpwd.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
                     } else {
                         //设置EditText文本为隐藏的
                         mEtOldpwd.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                        mEtNwepwd.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                        mEtNewpwd.setTransformationMethod(PasswordTransformationMethod.getInstance());
                     }
                     mEtOldpwd.postInvalidate();
-                    mEtNwepwd.postInvalidate();
+                    mEtNewpwd.postInvalidate();
                     //切换后将EditText光标置于末尾
                     CharSequence charSequence = mEtOldpwd.getText();
                     if (charSequence instanceof Spannable) {
                         Spannable spannable = (Spannable) charSequence;
                         Selection.setSelection(spannable, charSequence.length());
                     }
-                    CharSequence charSequence2 = mEtOldpwd.getText();
+                    CharSequence charSequence2 = mEtNewpwd.getText();
                     if (charSequence2 instanceof Spannable) {
                         Spannable spannable2 = (Spannable) charSequence2;
                         Selection.setSelection(spannable2, charSequence2.length());
@@ -64,16 +64,19 @@ public class SettingPwdActivity extends AppCompatActivity {
         setContentView(R.layout.setting_pwd);
         findView();
         setListener();
+
     }
 
     private void setListener() {
         mIBtnBack.setOnClickListener(mOClickListener);
+        mBtnSave.setOnClickListener(mOClickListener);
+        mCbShow.setOnClickListener(mOClickListener);
     }
 
     private void findView() {
         mIBtnBack = (ImageButton) findViewById(R.id.IBtnPwdBack);
         mEtOldpwd = (EditText) findViewById(R.id.EtSetOldpwd);
-        mEtNwepwd = (EditText) findViewById(R.id.EtSetNewpwd);
+        mEtNewpwd = (EditText) findViewById(R.id.EtSetNewpwd);
         mCbShow = (CheckBox) findViewById(R.id.CbPwdShow);
         mBtnSave = (Button) findViewById(R.id.BtnPwdSave);
     }

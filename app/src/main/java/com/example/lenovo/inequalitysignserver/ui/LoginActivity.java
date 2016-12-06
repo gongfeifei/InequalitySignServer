@@ -79,6 +79,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         findView();
         setListener();
+        mIBtnSwitch.setImageResource(R.drawable.hidepwd);
 
     }
 

@@ -1,6 +1,7 @@
 package com.example.lenovo.inequalitysignserver.ui;
 
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -8,6 +9,8 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -15,6 +18,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -34,6 +38,7 @@ import com.example.lenovo.inequalitysignserver.R;
 import com.example.lenovo.inequalitysignserver.adapter.DBAdapter;
 import com.example.lenovo.inequalitysignserver.entity.Account;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -108,7 +113,7 @@ public class ManagerActivity extends AppCompatActivity {
                     Account account = new Account();
                     account.shop_id = uname;
                     account.shop_pwd = pwd;
-                    account.shop_img_small = "http://10.7.1.4/201404gongfeifei/image/1.jpg";
+                    account.shop_img_small = smallimg.getBytes();
                     account.shop_img_big = "http://10.7.1.4/201404gongfeifei/image/2.jpg";
                     account.shop_name = name;
                     account.shop_type = type;
@@ -118,6 +123,7 @@ public class ManagerActivity extends AppCompatActivity {
                     account.shop_description = inform;
 
                     long column = dbAdapter.insert(account);
+                    sharedPreferences.edit().clear().commit();
                     Log.e("column", String.valueOf(column));
                     if (column == -1) {
                         Toast.makeText(ManagerActivity.this, "信息保存失败,请重新注册！",
@@ -148,9 +154,12 @@ public class ManagerActivity extends AppCompatActivity {
     private String address;
     private String tel;
     private String pwd;
+    private SharedPreferences sharedPreferences;
+    private String smallimg;
+    private Bitmap bitmap;
 
     /**
-     * 上传头像
+     * 上传商家logo
      */
     private void uploadHeadImage() {
         View view = LayoutInflater.from(this).inflate(R.layout.manager_popupwindow, null);
@@ -206,6 +215,13 @@ public class ManagerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manager);
         createCameraTempFile(savedInstanceState);
+
+//        Drawable drawable = getResources().getDrawable(R.drawable.logo);
+//        BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+//        Bitmap bitmap = bitmapDrawable.getBitmap();
+//        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+//        bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+//        smallBytes = outputStream.toByteArray();
         dbAdapter = new DBAdapter(this);
         dbAdapter.open();
         findView();
@@ -228,15 +244,23 @@ public class ManagerActivity extends AppCompatActivity {
 
 //        String name = i.getStringExtra("NAME");
 
-        SharedPreferences spf = getSharedPreferences("ACCOUNT", Context.MODE_APPEND);
-        uname = spf.getString("UNAME", "");
-        pwd = spf.getString("PWD", "");
-        name = spf.getString("NAME", "");
-        type = spf.getString("TYPE", "");
-        inform = spf.getString("INFORM", "");
-        city = spf.getString("CITY", "");
-        address = spf.getString("ADDRESS", "");
-        tel = spf.getString("TEL", "");
+        sharedPreferences = getSharedPreferences("ACCOUNT", Context.MODE_APPEND);
+        uname = sharedPreferences.getString("UNAME", "");
+        pwd = sharedPreferences.getString("PWD", "");
+        smallimg = sharedPreferences.getString("SIMG", "");
+//        Log.e("+++++++++++++", smallimg);
+        name = sharedPreferences.getString("NAME", "");
+        type = sharedPreferences.getString("TYPE", "");
+        inform = sharedPreferences.getString("INFORM", "");
+        city = sharedPreferences.getString("CITY", "");
+        address = sharedPreferences.getString("ADDRESS", "");
+        tel = sharedPreferences.getString("TEL", "");
+        byte []b = Base64.decode(smallimg, Base64.DEFAULT);
+        bitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
+        mIvHead.setImageBitmap(bitmap);
+        if (smallimg.isEmpty()) {
+            mIvHead.setImageResource(R.drawable.logo);
+        }
         mTvName.setText(name);
         mTvType.setText(type);
         mTvCity.setText(city);
@@ -304,6 +328,15 @@ public class ManagerActivity extends AppCompatActivity {
 
                     //此处后面可以将bitMap转为二进制上传后台网络
                     //......
+
+                    ByteArrayOutputStream os = new ByteArrayOutputStream();
+                    bitMap.compress(Bitmap.CompressFormat.PNG, 100, os);//图片压缩，30代表压缩率，压缩了70%
+                    byte[] smallBytes = os.toByteArray();
+                    String string = Base64.encodeToString(smallBytes, Base64.DEFAULT);
+                    SharedPreferences spf = getSharedPreferences("ACCOUNT", Context.MODE_APPEND);
+                    SharedPreferences.Editor editor = spf.edit();
+                    editor.putString("SIMG", string);
+                    editor.commit();
 
                 }
                 break;

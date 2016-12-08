@@ -88,7 +88,7 @@ public class DBAdapter {
             accounts[i].id = cursor.getInt(0);
             accounts[i].shop_id = cursor.getString(cursor.getColumnIndex(KEY_UNAME));
             accounts[i].shop_pwd = cursor.getString(cursor.getColumnIndex(KEY_PWD));
-            accounts[i].shop_img_small = cursor.getString(cursor.getColumnIndex(KEY_SIMG));
+            accounts[i].shop_img_small = cursor.getBlob(cursor.getColumnIndex(KEY_SIMG));
             accounts[i].shop_img_big = cursor.getString(cursor.getColumnIndex(KEY_BIMG));
             accounts[i].shop_name = cursor.getString(cursor.getColumnIndex(KEY_NAME));
             accounts[i].shop_type = cursor.getString(cursor.getColumnIndex(KEY_TYPE));

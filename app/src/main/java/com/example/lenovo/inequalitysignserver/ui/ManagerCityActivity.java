@@ -1,5 +1,8 @@
 package com.example.lenovo.inequalitysignserver.ui;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -73,7 +76,16 @@ public class ManagerCityActivity extends AppCompatActivity {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position2, long id) {
                         String city = citys[position][position2];
-                        Toast.makeText(ManagerCityActivity.this, city, Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(ManagerCityActivity.this, city, Toast.LENGTH_SHORT).show();
+                        SharedPreferences spf = getSharedPreferences("ACCOUNT", Context.MODE_APPEND);
+                        SharedPreferences.Editor editor = spf.edit();
+                        editor.putString("CITY", city);
+                        editor.commit();
+                        Intent intent = new Intent(ManagerCityActivity.this, ManagerActivity.class);
+
+
+                        startActivity(intent);
+                        finish();
                     }
                 });
             }

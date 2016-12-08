@@ -49,9 +49,12 @@
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
-            android:process=":remote"></service>
+            android:process=":remote" />
 
-        <activity android:name=".ui.ManagerCityActivity"></activity>
+        <activity android:name=".ui.ManagerCityActivity" />
+        <activity android:name=".ui.ManagerDescription" />
+        <activity android:name=".ui.CodeActivity" />
+        <activity android:name=".ui.RegisterActivity"></activity>
     </application>
 
 </manifest>

@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize">
         <ImageButton
-            android:id="@+id/IBtnTelBack"
+            android:id="@+id/IBtnDescriBack"
             android:layout_width="60dp"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
@@ -21,11 +21,11 @@
             android:textSize="20sp"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="编辑联系方式"
+            android:text="编辑描述信息"
             android:gravity="center"
             android:textColor="@android:color/white" />
         <Button
-            android:id="@+id/BtnTelSave"
+            android:id="@+id/BtnDescriSave"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="完成"
@@ -34,25 +34,33 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"/>
     </RelativeLayout>
-    <RelativeLayout
+
+    <EditText
         android:layout_marginTop="10dp"
+        android:id="@+id/EtDescriInform"
+        android:gravity="start"
+        android:hint="填写商家的详细描述信息…"
+        android:padding="10dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <EditText
-            android:id="@+id/EtEditTel"
-            android:hint="请输入联系方式"
-            android:padding="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@android:color/white"/>
-        <ImageButton
-            android:id="@+id/IBtnTelCancel"
-            android:layout_marginRight="10dp"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:background="@drawable/sat_item"/>
-    </RelativeLayout>
+        android:layout_height="120dp"
+        android:background="@android:color/white"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white">
+        <ImageView
+            android:scaleType="fitStart"
+            android:id="@+id/IvDescriPic"
+            android:layout_margin="20dp"
+            android:padding="2dp"
+            android:background="@drawable/tvadd"
+            android:src="@drawable/addpic"
+            android:layout_width="160dp"
+            android:layout_height="160dp" />
+    </LinearLayout>
+
+
+
+
 
 </LinearLayout>

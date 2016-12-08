@@ -77,6 +77,8 @@
             android:layout_height="wrap_content"
             android:text="商家名称"/>
         <TextView
+            android:textSize="18sp"
+            android:gravity="end"
             android:layout_gravity="center_vertical"
             android:id="@+id/TvManagerName"
             android:textColor="#888888"
@@ -114,6 +116,8 @@
             android:layout_height="wrap_content"
             android:text="商家类型"/>
         <TextView
+            android:textSize="18sp"
+            android:gravity="end"
             android:layout_gravity="center_vertical"
             android:id="@+id/TvManagerType"
             android:textColor="#888888"
@@ -127,6 +131,43 @@
             android:clickable="false"
             android:layout_centerVertical="true"
             android:id="@+id/IBtnManagerType"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/imagebtn"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/LlayManagerDescription"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:background="@android:color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="1dp">
+        <TextView
+            android:layout_gravity="center_vertical"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="描述信息"/>
+        <TextView
+            android:layout_gravity="center_vertical"
+            android:id="@+id/TvManagerDescription"
+            android:textColor="#888888"
+            android:background="@null"
+            android:layout_weight="3"
+            android:padding="10dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+        <ImageButton
+            android:focusable="false"
+            android:clickable="false"
+            android:layout_centerVertical="true"
+            android:id="@+id/IBtnManagerDescription"
             android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -151,6 +192,8 @@
             android:layout_height="wrap_content"
             android:text="选择城市"/>
         <TextView
+            android:textSize="18sp"
+            android:gravity="end"
             android:layout_gravity="center_vertical"
             android:id="@+id/TvManagerCity"
             android:textColor="#888888"
@@ -188,6 +231,8 @@
             android:layout_height="wrap_content"
             android:text="所在地址"/>
         <TextView
+            android:textSize="18sp"
+            android:gravity="end"
             android:layout_gravity="center_vertical"
             android:id="@+id/TvManagerAddress"
             android:textColor="#888888"
@@ -225,6 +270,8 @@
             android:layout_height="wrap_content"
             android:text="联系方式"/>
         <TextView
+            android:textSize="18sp"
+            android:gravity="end"
             android:layout_gravity="center_vertical"
             android:id="@+id/TvManagerTel"
             android:textColor="#888888"
@@ -243,5 +290,13 @@
             android:layout_height="wrap_content"
             android:background="@drawable/imagebtn"/>
     </LinearLayout>
+    <Button
+        android:textSize="18sp"
+        android:id="@+id/BtnManagerSave"
+        android:background="@drawable/btnshape"
+        android:layout_margin="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="保存我的商家信息"/>
 
 </LinearLayout>

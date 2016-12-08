@@ -18,8 +18,16 @@ public class DBAdapter {
     private static final int DB_VERSION = 1;
 
     public static final String KEY_ID = "id";
-    public static final String KEY_NAME = "name";
-    public static final String KEY_PWD = "pwd";
+    public static final String KEY_UNAME = "shop_id";
+    public static final String KEY_PWD = "shop_pwd";
+    public static final String KEY_SIMG = "shop_img_small";
+    public static final String KEY_BIMG = "shop_img_big";
+    public static final String KEY_NAME = "shop_name";
+    public static final String KEY_TYPE = "shop_type";
+    public static final String KEY_ADDRESS = "shop_address";
+    public static final String KEY_TEL = "shop_tel";
+    public static final String KEY_CITY = "shop_city";
+    public static final String KEY_DESCRI = "shop_description";
 
     private SQLiteDatabase db;
     private final Context context;
@@ -48,15 +56,24 @@ public class DBAdapter {
     public long insert(Account account) {
         ContentValues newValues = new ContentValues();
 
-        newValues.put(KEY_NAME, account.Name);
-        newValues.put(KEY_PWD, account.Pwd);
+        newValues.put(KEY_UNAME, account.shop_id);
+        newValues.put(KEY_PWD, account.shop_pwd);
+        newValues.put(KEY_SIMG, account.shop_img_small);
+        newValues.put(KEY_BIMG, account.shop_img_big);
+        newValues.put(KEY_NAME, account.shop_name);
+        newValues.put(KEY_TYPE, account.shop_type);
+        newValues.put(KEY_ADDRESS, account.shop_address);
+        newValues.put(KEY_TEL, account.shop_tel);
+        newValues.put(KEY_CITY, account.shop_city);
+        newValues.put(KEY_DESCRI, account.shop_description);
 
         return db.insert(DB_TABLE, null, newValues);
     }
 
     public Account[] queryOneData(String name) {
-        Cursor results =  db.query(DB_TABLE, new String[] { KEY_ID, KEY_NAME, KEY_PWD},
-                KEY_NAME + "=" + name, null, null, null, null);
+        Cursor results =  db.query(DB_TABLE, new String[] { KEY_ID, KEY_UNAME, KEY_PWD,
+                KEY_SIMG, KEY_BIMG, KEY_NAME, KEY_TYPE, KEY_ADDRESS, KEY_TEL, KEY_CITY,
+                KEY_DESCRI}, KEY_UNAME + "=" + name, null, null, null, null);
         return ConvertToAccount(results);
     }
 
@@ -68,9 +85,17 @@ public class DBAdapter {
         Account[] accounts = new Account[resultCounts];
         for (int i = 0 ; i<resultCounts; i++){
             accounts[i] = new Account();
-            accounts[i].ID = cursor.getInt(0);
-            accounts[i].Name = cursor.getString(cursor.getColumnIndex(KEY_NAME));
-            accounts[i].Pwd = cursor.getString(cursor.getColumnIndex(KEY_PWD));
+            accounts[i].id = cursor.getInt(0);
+            accounts[i].shop_id = cursor.getString(cursor.getColumnIndex(KEY_UNAME));
+            accounts[i].shop_pwd = cursor.getString(cursor.getColumnIndex(KEY_PWD));
+            accounts[i].shop_img_small = cursor.getString(cursor.getColumnIndex(KEY_SIMG));
+            accounts[i].shop_img_big = cursor.getString(cursor.getColumnIndex(KEY_BIMG));
+            accounts[i].shop_name = cursor.getString(cursor.getColumnIndex(KEY_NAME));
+            accounts[i].shop_type = cursor.getString(cursor.getColumnIndex(KEY_TYPE));
+            accounts[i].shop_address = cursor.getString(cursor.getColumnIndex(KEY_ADDRESS));
+            accounts[i].shop_tel = cursor.getString(cursor.getColumnIndex(KEY_TEL));
+            accounts[i].shop_city = cursor.getString(cursor.getColumnIndex(KEY_CITY));
+            accounts[i].shop_description = cursor.getString(cursor.getColumnIndex(KEY_DESCRI));
 
             cursor.moveToNext();
         }
@@ -79,10 +104,18 @@ public class DBAdapter {
 
     public long updateOneData(String name , Account account){
         ContentValues updateValues = new ContentValues();
-        updateValues.put(KEY_NAME, account.Name);
-        updateValues.put(KEY_PWD, account.Pwd);
+        updateValues.put(KEY_UNAME, account.shop_id);
+        updateValues.put(KEY_PWD, account.shop_pwd);
+        updateValues.put(KEY_SIMG, account.shop_img_small);
+        updateValues.put(KEY_BIMG, account.shop_img_big);
+        updateValues.put(KEY_NAME, account.shop_name);
+        updateValues.put(KEY_TYPE, account.shop_type);
+        updateValues.put(KEY_ADDRESS, account.shop_address);
+        updateValues.put(KEY_TEL, account.shop_tel);
+        updateValues.put(KEY_CITY, account.shop_city);
+        updateValues.put(KEY_DESCRI, account.shop_description);
 
-        return db.update(DB_TABLE, updateValues,  KEY_NAME + "=" + name, null);
+        return db.update(DB_TABLE, updateValues,  KEY_UNAME + "=" + name, null);
     }
     /**
      * 静态Helper类，用于建立、更新和打开数据库
@@ -92,9 +125,13 @@ public class DBAdapter {
             super(context, name, factory, version);
         }
 
-        private static final String DB_CREATE = "create table" + DB_TABLE + "("+ KEY_ID
-                + " integer primary key autoincrement, " + KEY_NAME+ " text not null unique, "
-                + KEY_PWD+ " text not null);";
+        private static final String DB_CREATE = "create table " + DB_TABLE + " ("+ KEY_ID
+                + " integer primary key autoincrement, " + KEY_UNAME + " text not null, "
+                + KEY_PWD + " text not null, " + KEY_SIMG + " text not null, " + KEY_BIMG
+                + " text not null, " + KEY_NAME + " text not null, " + KEY_TYPE
+                + " text, " + KEY_ADDRESS + " text not null, " + KEY_TEL
+                + " text not null, " + KEY_CITY + " text not null, " + KEY_DESCRI
+                + " text not null);";
         @Override
         public void onCreate(SQLiteDatabase db) {
             db.execSQL(DB_CREATE);

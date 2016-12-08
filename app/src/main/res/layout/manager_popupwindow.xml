@@ -10,7 +10,7 @@
         android:layout_height="50dp"
         android:background="#E8E8E8"
         android:gravity="center"
-        android:text="上传头像"
+        android:text="上传图片"
         android:textColor="@android:color/black"
         android:textSize="18sp" />
 

@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     };
     private SatelliteMenu mSatMenu;
     private Button mBtnClick;
+    private Button mBtnCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +68,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void setListener() {
 //        mBtnManager.setOnClickListener(mOClickListener);
+        mBtnCode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, CodeActivity.class);
+                startActivity(intent);
+            }
+        });
         mSatMenu.setOnItemClickedListener(new SatelliteMenu.SateliteClickedListener() {
             @Override
             public void eventOccured(int id) {
@@ -100,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
 //        mBtnInquiry = (Button) findViewById(R.id.BtnMainInquiry);
         mSatMenu = (SatelliteMenu) findViewById(R.id.SatMenuMain);
         mBtnClick = (Button) findViewById(R.id.BtnMainClick);
+        mBtnCode = (Button) findViewById(R.id.BtnMainCode);
     }
 
 }

@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,11 +15,13 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -28,6 +31,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.lenovo.inequalitysignserver.R;
+import com.example.lenovo.inequalitysignserver.adapter.DBAdapter;
+import com.example.lenovo.inequalitysignserver.entity.Account;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -80,6 +85,10 @@ public class ManagerActivity extends AppCompatActivity {
                     builder.create();
                     builder.show();
                     break;
+                case R.id.LlayManagerDescription:
+                    intent.setClass(ManagerActivity.this, ManagerDescription.class);
+                    startActivity(intent);
+                    break;
                 case R.id.LlayManagerCity:
                     intent.setClass(ManagerActivity.this, ManagerCityActivity.class);
                     startActivity(intent);
@@ -95,12 +104,50 @@ public class ManagerActivity extends AppCompatActivity {
                 case R.id.IBtnManagerBack:
                     finish();
                     break;
+                case R.id.BtnManagerSave:
+                    Account account = new Account();
+                    account.shop_id = uname;
+                    account.shop_pwd = pwd;
+                    account.shop_img_small = "http://10.7.1.4/201404gongfeifei/image/1.jpg";
+                    account.shop_img_big = "http://10.7.1.4/201404gongfeifei/image/2.jpg";
+                    account.shop_name = name;
+                    account.shop_type = type;
+                    account.shop_address = address;
+                    account.shop_tel = tel;
+                    account.shop_city = city;
+                    account.shop_description = inform;
+
+                    long column = dbAdapter.insert(account);
+                    Log.e("column", String.valueOf(column));
+                    if (column == -1) {
+                        Toast.makeText(ManagerActivity.this, "信息保存失败,请重新注册！",
+                                Toast.LENGTH_SHORT).show();
+                    } else {
+                        Log.e("基本信息", account.toString());
+                        Toast.makeText(ManagerActivity.this, "信息保存成功，请登录！",
+                                Toast.LENGTH_SHORT).show();
+                    }
+
+                    intent.setClass(ManagerActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                    break;
             }
         }
     };
+    private DBAdapter dbAdapter;
     private ImageButton mIBtnBack;
     private LinearLayout mLlayCity;
     private TextView mTvCity;
+    private LinearLayout mLlayDescription;
+    private String uname;
+    private Button mBtnSave;
+    private String name;
+    private String type;
+    private String inform;
+    private String city;
+    private String address;
+    private String tel;
+    private String pwd;
 
     /**
      * 上传头像
@@ -112,7 +159,7 @@ public class ManagerActivity extends AppCompatActivity {
         TextView mTvCancel = (TextView) view.findViewById(R.id.TvPopupCancel);
         final PopupWindow popupWindow = new PopupWindow(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         popupWindow.setBackgroundDrawable(getResources().getDrawable(android.R.color.transparent));
-        popupWindow.setOutsideTouchable(true);
+        popupWindow.setOutsideTouchable(false);
         View parent = LayoutInflater.from(this).inflate(R.layout.activity_manager, null);
         popupWindow.showAtLocation(parent, Gravity.BOTTOM, 0, 0);
         //popupWindow在弹窗的时候背景半透明
@@ -159,8 +206,42 @@ public class ManagerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manager);
         createCameraTempFile(savedInstanceState);
+        dbAdapter = new DBAdapter(this);
+        dbAdapter.open();
         findView();
         setListener();
+        getData();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        dbAdapter.close();
+    }
+
+    private void getData() {
+
+//        Intent i = getIntent();
+//        uname = i.getStringExtra("UNAME");
+//        pwd = i.getStringExtra("PWD");
+
+
+//        String name = i.getStringExtra("NAME");
+
+        SharedPreferences spf = getSharedPreferences("ACCOUNT", Context.MODE_APPEND);
+        uname = spf.getString("UNAME", "");
+        pwd = spf.getString("PWD", "");
+        name = spf.getString("NAME", "");
+        type = spf.getString("TYPE", "");
+        inform = spf.getString("INFORM", "");
+        city = spf.getString("CITY", "");
+        address = spf.getString("ADDRESS", "");
+        tel = spf.getString("TEL", "");
+        mTvName.setText(name);
+        mTvType.setText(type);
+        mTvCity.setText(city);
+        mTvAddress.setText(address);
+        mTvTel.setText(tel);
     }
 
     /**
@@ -268,16 +349,19 @@ public class ManagerActivity extends AppCompatActivity {
         mRlayHead.setOnClickListener(mOClickListener);
         mLlayName.setOnClickListener(mOClickListener);
         mLlayType.setOnClickListener(mOClickListener);
+        mLlayDescription.setOnClickListener(mOClickListener);
         mLlayCity.setOnClickListener(mOClickListener);
         mLlayAddress.setOnClickListener(mOClickListener);
         mLlayTel.setOnClickListener(mOClickListener);
         mIBtnBack.setOnClickListener(mOClickListener);
+        mBtnSave.setOnClickListener(mOClickListener);
     }
 
     private void findView() {
         mRlayHead = (RelativeLayout) findViewById(R.id.RlayManagerHead);
         mLlayName = (LinearLayout) findViewById(R.id.LlayManagerName);
         mLlayType = (LinearLayout) findViewById(R.id.LlayManagerType);
+        mLlayDescription = (LinearLayout) findViewById(R.id.LlayManagerDescription);
         mLlayCity = (LinearLayout) findViewById(R.id.LlayManagerCity);
         mLlayAddress = (LinearLayout) findViewById(R.id.LlayManagerAddress);
         mLlayTel = (LinearLayout) findViewById(R.id.LlayManagerTel);
@@ -288,6 +372,7 @@ public class ManagerActivity extends AppCompatActivity {
         mTvAddress = (TextView) findViewById(R.id.TvManagerAddress);
         mTvTel = (TextView) findViewById(R.id.TvManagerTel);
         mIBtnBack = (ImageButton) findViewById(R.id.IBtnManagerBack);
+        mBtnSave = (Button) findViewById(R.id.BtnManagerSave);
     }
 
     /**
@@ -311,8 +396,13 @@ public class ManagerActivity extends AppCompatActivity {
         @Override
         public void onClick(DialogInterface dialog, int which) {
             setIndex(which);
-            Toast.makeText(ManagerActivity.this, "您选择了：" + index + ":" + types[index],
-                    Toast.LENGTH_SHORT).show();
+//            Toast.makeText(ManagerActivity.this, "您选择了：" + index + ":" + types[index],
+//                    Toast.LENGTH_SHORT).show();
+            mTvType.setText(types[index]);
+            SharedPreferences spf = getSharedPreferences("ACCOUNT", Context.MODE_APPEND);
+            SharedPreferences.Editor editor = spf.edit();
+            editor.putString("TYPE", types[index]);
+            editor.commit();
             dialog.dismiss();
         }
     }

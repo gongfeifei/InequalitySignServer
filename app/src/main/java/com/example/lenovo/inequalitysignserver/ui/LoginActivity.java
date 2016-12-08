@@ -31,10 +31,11 @@ public class LoginActivity extends AppCompatActivity {
     private View.OnClickListener mOClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            Intent intent = new Intent();
             switch (v.getId()) {
                 case R.id.BtnLogin:
                     saveAccount();
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
 //                    Intent intent = new Intent(LoginActivity.this, CheckActivity.class);
@@ -44,8 +45,8 @@ public class LoginActivity extends AppCompatActivity {
 //
 //                    if (mCbRemember.isChecked()) {
 //                        Account account = new Account();
-//                        account.Name = mEtName.getText().toString();
-//                        account.Pwd = mEtPwd.getText().toString();
+//                        account.shop_id = mEtName.getText().toString();
+//                        account.shop_pwd = mEtPwd.getText().toString();
 //                        dbAdapter.insert(account);
 //                    }
                     break;
@@ -68,10 +69,15 @@ public class LoginActivity extends AppCompatActivity {
                         Selection.setSelection(spannable, charSequence.length());
                     }
                     break;
+                case R.id.BtnLoginRegister:
+                    intent.setClass(LoginActivity.this, RegisterActivity.class);
+                    startActivity(intent);
+                    break;
 
             }
         }
     };
+    private Button mBtnRegister;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +94,7 @@ public class LoginActivity extends AppCompatActivity {
         if (!name.isEmpty()) {
             Account[] accounts = dbAdapter.queryOneData(name);
             if (accounts != null) {
-                mEtPwd.setText(accounts[0].Pwd);
+                mEtPwd.setText(accounts[0].shop_pwd);
             }
         }
 
@@ -114,6 +120,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
+        mBtnRegister.setOnClickListener(mOClickListener);
     }
 
     private void findView() {
@@ -122,5 +129,6 @@ public class LoginActivity extends AppCompatActivity {
         mBtnLogin = (Button) findViewById(R.id.BtnLogin);
         mCbRemember = (CheckBox) findViewById(R.id.CbLoginRemember);
         mIBtnSwitch = (ImageButton) findViewById(R.id.IBtnLoginSwitch);
+        mBtnRegister = (Button) findViewById(R.id.BtnLoginRegister);
     }
 }

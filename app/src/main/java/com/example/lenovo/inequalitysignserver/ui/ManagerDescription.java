@@ -13,6 +13,7 @@ import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +29,7 @@ import android.widget.Toast;
 
 import com.example.lenovo.inequalitysignserver.R;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 
 public class ManagerDescription extends AppCompatActivity {
@@ -65,7 +67,7 @@ public class ManagerDescription extends AppCompatActivity {
     private void saveDescri() {
         String inform = mEtInform.getText().toString();
         if (inform.isEmpty()) {
-            Toast.makeText(this, "请输入描述信息", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "请填写描述信息", Toast.LENGTH_SHORT).show();
         } else {
 
             SharedPreferences spf = getSharedPreferences("ACCOUNT", Context.MODE_APPEND);
@@ -138,6 +140,20 @@ public class ManagerDescription extends AppCompatActivity {
         createCameraTempFile(savedInstanceState);
         findView();
         setListener();
+        getDescri();
+    }
+
+    private void getDescri() {
+        Intent i = getIntent();
+        mEtInform.setText(i.getStringExtra("inform"));
+        String bigimg = i.getStringExtra("bigimg");
+
+        if (!bigimg.isEmpty()) {
+            byte []b = Base64.decode(bigimg, Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
+            mIvPic.setImageBitmap(bitmap);
+        }
+
     }
 
     /**
@@ -200,6 +216,15 @@ public class ManagerDescription extends AppCompatActivity {
 
                     //此处后面可以将bitMap转为二进制上传后台网络
                     //......
+
+                    ByteArrayOutputStream os = new ByteArrayOutputStream();
+                    bitMap.compress(Bitmap.CompressFormat.PNG, 100, os);//图片压缩，30代表压缩率，压缩了70%
+                    byte[] bigBytes = os.toByteArray();
+                    String string = Base64.encodeToString(bigBytes, Base64.DEFAULT);
+                    SharedPreferences spf = getSharedPreferences("ACCOUNT", Context.MODE_APPEND);
+                    SharedPreferences.Editor editor = spf.edit();
+                    editor.putString("BIMG", string);
+                    editor.commit();
 
                 }
                 break;

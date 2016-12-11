@@ -80,6 +80,7 @@ public class ManagerCityActivity extends AppCompatActivity {
             "金华", "丽水", "宁波", "衢州", "绍兴", "台州", "温州", "舟山"}};
     private ArrayAdapter<String> mProvinceAdapter;
     private ArrayAdapter<String> mCityAdapter;
+    private static int pos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,8 +90,16 @@ public class ManagerCityActivity extends AppCompatActivity {
         setListener();
         mProvinceAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_expandable_list_item_1, provinces);
-
         mLvProvince.setAdapter(mProvinceAdapter);
+
+        mCityAdapter = new ArrayAdapter<String>(ManagerCityActivity.this,
+                android.R.layout.simple_expandable_list_item_1, citys[pos]);
+        mLvCity.setAdapter(mCityAdapter);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     private void setListener() {
@@ -98,25 +107,27 @@ public class ManagerCityActivity extends AppCompatActivity {
         mLvProvince.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                pos = position;
                 mCityAdapter = new ArrayAdapter<String>(ManagerCityActivity.this,
                         android.R.layout.simple_expandable_list_item_1, citys[position]);
                 mLvCity.setAdapter(mCityAdapter);
-                mLvCity.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position2, long id) {
-                        String city = citys[position][position2];
+
+            }
+        });
+        mLvCity.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String city = citys[pos][position];
 //                        Toast.makeText(ManagerCityActivity.this, city, Toast.LENGTH_SHORT).show();
-                        SharedPreferences spf = getSharedPreferences("ACCOUNT", Context.MODE_APPEND);
-                        SharedPreferences.Editor editor = spf.edit();
-                        editor.putString("CITY", city);
-                        editor.commit();
-                        Intent intent = new Intent(ManagerCityActivity.this, ManagerActivity.class);
+                SharedPreferences spf = getSharedPreferences("ACCOUNT", Context.MODE_APPEND);
+                SharedPreferences.Editor editor = spf.edit();
+                editor.putString("CITY", city);
+                editor.commit();
+                Intent intent = new Intent(ManagerCityActivity.this, ManagerActivity.class);
 
 
-                        startActivity(intent);
-                        finish();
-                    }
-                });
+                startActivity(intent);
+                finish();
             }
         });
 

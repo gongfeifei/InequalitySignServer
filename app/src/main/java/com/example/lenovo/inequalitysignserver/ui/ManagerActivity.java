@@ -69,7 +69,7 @@ public class ManagerActivity extends AppCompatActivity {
             "川菜", "粤菜", "湘菜", "北京菜", "西北菜", "东北菜", "清真", "烧烤", "韩国料理",
             "中餐", "西餐", "快餐", "甜点"};
 
-    private RadioOnClick radioOnClick = new RadioOnClick(0);
+    private RadioOnClick radioOnClick = new RadioOnClick(i);
     private View.OnClickListener mOClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -80,6 +80,7 @@ public class ManagerActivity extends AppCompatActivity {
                     break;
                 case R.id.LlayManagerName:
                     intent.setClass(ManagerActivity.this, ManagerNameActivity.class);
+                    intent.putExtra("name", name);
                     startActivity(intent);
                     break;
                 case R.id.LlayManagerType:
@@ -92,6 +93,8 @@ public class ManagerActivity extends AppCompatActivity {
                     break;
                 case R.id.LlayManagerDescription:
                     intent.setClass(ManagerActivity.this, ManagerDescription.class);
+                    intent.putExtra("inform", inform);
+                    intent.putExtra("bigimg", bigimg);
                     startActivity(intent);
                     break;
                 case R.id.LlayManagerCity:
@@ -100,10 +103,12 @@ public class ManagerActivity extends AppCompatActivity {
                     break;
                 case R.id.LlayManagerAddress:
                     intent.setClass(ManagerActivity.this, ManagerAddressActivity.class);
+                    intent.putExtra("address", address);
                     startActivity(intent);
                     break;
                 case R.id.LlayManagerTel:
                     intent.setClass(ManagerActivity.this, ManagerTelActivity.class);
+                    intent.putExtra("tel", tel);
                     startActivity(intent);
                     break;
                 case R.id.IBtnManagerBack:
@@ -114,7 +119,7 @@ public class ManagerActivity extends AppCompatActivity {
                     account.shop_id = uname;
                     account.shop_pwd = pwd;
                     account.shop_img_small = smallimg.getBytes();
-                    account.shop_img_big = "http://10.7.1.4/201404gongfeifei/image/2.jpg";
+                    account.shop_img_big = bigimg.getBytes();
                     account.shop_name = name;
                     account.shop_type = type;
                     account.shop_address = address;
@@ -157,6 +162,9 @@ public class ManagerActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private String smallimg;
     private Bitmap bitmap;
+    private String bigimg;
+    private static int i;
+    private TextView mTvDescri;
 
     /**
      * 上传商家logo
@@ -169,6 +177,7 @@ public class ManagerActivity extends AppCompatActivity {
         final PopupWindow popupWindow = new PopupWindow(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         popupWindow.setBackgroundDrawable(getResources().getDrawable(android.R.color.transparent));
         popupWindow.setOutsideTouchable(false);
+        popupWindow.setFocusable(true);
         View parent = LayoutInflater.from(this).inflate(R.layout.activity_manager, null);
         popupWindow.showAtLocation(parent, Gravity.BOTTOM, 0, 0);
         //popupWindow在弹窗的时候背景半透明
@@ -216,12 +225,6 @@ public class ManagerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_manager);
         createCameraTempFile(savedInstanceState);
 
-//        Drawable drawable = getResources().getDrawable(R.drawable.logo);
-//        BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
-//        Bitmap bitmap = bitmapDrawable.getBitmap();
-//        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-//        bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
-//        smallBytes = outputStream.toByteArray();
         dbAdapter = new DBAdapter(this);
         dbAdapter.open();
         findView();
@@ -252,17 +255,19 @@ public class ManagerActivity extends AppCompatActivity {
         name = sharedPreferences.getString("NAME", "");
         type = sharedPreferences.getString("TYPE", "");
         inform = sharedPreferences.getString("INFORM", "");
+        bigimg = sharedPreferences.getString("BIMG", "");
         city = sharedPreferences.getString("CITY", "");
         address = sharedPreferences.getString("ADDRESS", "");
         tel = sharedPreferences.getString("TEL", "");
-        byte []b = Base64.decode(smallimg, Base64.DEFAULT);
-        bitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
-        mIvHead.setImageBitmap(bitmap);
-        if (smallimg.isEmpty()) {
-            mIvHead.setImageResource(R.drawable.logo);
+
+        if (!smallimg.isEmpty()) {
+            byte []b = Base64.decode(smallimg, Base64.DEFAULT);
+            bitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
+            mIvHead.setImageBitmap(bitmap);
         }
         mTvName.setText(name);
         mTvType.setText(type);
+        mTvDescri.setText(inform);
         mTvCity.setText(city);
         mTvAddress.setText(address);
         mTvTel.setText(tel);
@@ -401,6 +406,7 @@ public class ManagerActivity extends AppCompatActivity {
         mIvHead = (ImageView) findViewById(R.id.IvManagerHead);
         mTvName = (TextView) findViewById(R.id.TvManagerName);
         mTvType = (TextView) findViewById(R.id.TvManagerType);
+        mTvDescri = (TextView) findViewById(R.id.TvManagerDescription);
         mTvCity = (TextView) findViewById(R.id.TvManagerCity);
         mTvAddress = (TextView) findViewById(R.id.TvManagerAddress);
         mTvTel = (TextView) findViewById(R.id.TvManagerTel);
@@ -431,6 +437,7 @@ public class ManagerActivity extends AppCompatActivity {
             setIndex(which);
 //            Toast.makeText(ManagerActivity.this, "您选择了：" + index + ":" + types[index],
 //                    Toast.LENGTH_SHORT).show();
+            i = index;
             mTvType.setText(types[index]);
             SharedPreferences spf = getSharedPreferences("ACCOUNT", Context.MODE_APPEND);
             SharedPreferences.Editor editor = spf.edit();

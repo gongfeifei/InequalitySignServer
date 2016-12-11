@@ -59,7 +59,14 @@ public class ManagerAddressActivity extends AppCompatActivity {
         setContentView(R.layout.manager_address);
         findView();
         setListener();
+        getAddress();
     }
+
+    private void getAddress() {
+        Intent i = getIntent();
+        mEtAddress.setText(i.getStringExtra("address"));
+    }
+
     private void setListener() {
         mBtnSave.setOnClickListener(mOClickListener);
         mIBtnBack.setOnClickListener(mOClickListener);

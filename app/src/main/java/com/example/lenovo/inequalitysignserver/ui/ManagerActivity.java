@@ -224,7 +224,7 @@ public class ManagerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manager);
         createCameraTempFile(savedInstanceState);
-
+        i = 0;
         dbAdapter = new DBAdapter(this);
         dbAdapter.open();
         findView();

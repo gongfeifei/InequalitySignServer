@@ -8,7 +8,7 @@ public class Account {
     public String shop_id;
     public String shop_pwd;
     public byte[] shop_img_small;
-    public String shop_img_big;
+    public byte[] shop_img_big;
     public String shop_name;
     public String shop_type;
     public String shop_address;

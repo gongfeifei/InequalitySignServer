@@ -66,6 +66,13 @@ public class ManagerNameActivity extends AppCompatActivity {
         setContentView(R.layout.manager_name);
         findView();
         setListener();
+        getName();
+    }
+
+    private void getName() {
+        Intent i = getIntent();
+        mEtName.setText(i.getStringExtra("name"));
+
     }
 
     private void setListener() {

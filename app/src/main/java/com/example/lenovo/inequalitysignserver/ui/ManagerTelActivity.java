@@ -59,7 +59,14 @@ public class ManagerTelActivity extends AppCompatActivity {
         setContentView(R.layout.manager_tel);
         findView();
         setListener();
+        getTel();
     }
+
+    private void getTel() {
+        Intent i = getIntent();
+        mEtTel.setText(i.getStringExtra("tel"));
+    }
+
     private void setListener() {
         mBtnSave.setOnClickListener(mOClickListener);
         mIBtnBack.setOnClickListener(mOClickListener);

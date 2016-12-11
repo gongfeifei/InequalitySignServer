@@ -156,6 +156,8 @@
             android:layout_height="wrap_content"
             android:text="描述信息"/>
         <TextView
+            android:textSize="18sp"
+            android:gravity="end"
             android:layout_gravity="center_vertical"
             android:id="@+id/TvManagerDescription"
             android:textColor="#888888"

@@ -13,6 +13,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -36,7 +38,12 @@ import android.widget.Toast;
 
 import com.example.lenovo.inequalitysignserver.R;
 import com.example.lenovo.inequalitysignserver.adapter.DBAdapter;
+import com.example.lenovo.inequalitysignserver.config.ApiConfig;
 import com.example.lenovo.inequalitysignserver.entity.Account;
+import com.example.lenovo.inequalitysignserver.https.Network;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -82,9 +89,9 @@ public class ManagerActivity extends AppCompatActivity {
                     intent.setClass(ManagerActivity.this, ManagerNameActivity.class);
                     intent.putExtra("name", name);
                     startActivity(intent);
+                    finish();
                     break;
                 case R.id.LlayManagerType:
-//                    Toast.makeText(ManagerActivity.this, "选择商家类型", Toast.LENGTH_SHORT).show();
                     AlertDialog.Builder builder = new AlertDialog.Builder(ManagerActivity.this)
                             .setTitle("选择商家类型").setSingleChoiceItems(types,
                                     radioOnClick.getIndex(), radioOnClick);
@@ -96,55 +103,76 @@ public class ManagerActivity extends AppCompatActivity {
                     intent.putExtra("inform", inform);
                     intent.putExtra("bigimg", bigimg);
                     startActivity(intent);
+                    finish();
                     break;
                 case R.id.LlayManagerCity:
                     intent.setClass(ManagerActivity.this, ManagerCityActivity.class);
                     startActivity(intent);
+                    finish();
                     break;
                 case R.id.LlayManagerAddress:
                     intent.setClass(ManagerActivity.this, ManagerAddressActivity.class);
                     intent.putExtra("address", address);
                     startActivity(intent);
+                    finish();
                     break;
                 case R.id.LlayManagerTel:
                     intent.setClass(ManagerActivity.this, ManagerTelActivity.class);
                     intent.putExtra("tel", tel);
                     startActivity(intent);
+                    finish();
                     break;
                 case R.id.IBtnManagerBack:
                     finish();
                     break;
-                case R.id.BtnManagerSave:
-                    Account account = new Account();
-                    account.shop_id = uname;
-                    account.shop_pwd = pwd;
-                    account.shop_img_small = smallimg.getBytes();
-                    account.shop_img_big = bigimg.getBytes();
-                    account.shop_name = name;
-                    account.shop_type = type;
-                    account.shop_address = address;
-                    account.shop_tel = tel;
-                    account.shop_city = city;
-                    account.shop_description = inform;
+                case R.id.BtnManagerSave:   //保存我的商家信息
+                    saveToLocal();
 
-                    long column = dbAdapter.insert(account);
-                    sharedPreferences.edit().clear().commit();
-                    Log.e("column", String.valueOf(column));
-                    if (column == -1) {
-                        Toast.makeText(ManagerActivity.this, "信息保存失败,请重新注册！",
-                                Toast.LENGTH_SHORT).show();
-                    } else {
-                        Log.e("基本信息", account.toString());
-                        Toast.makeText(ManagerActivity.this, "信息保存成功，请登录！",
-                                Toast.LENGTH_SHORT).show();
-                    }
-
-                    intent.setClass(ManagerActivity.this, LoginActivity.class);
-                    startActivity(intent);
+                    finish();
                     break;
             }
         }
     };
+    private String id;
+    private String result = "";
+    private Handler h = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (result.equals("1")) {
+                Toast.makeText(ManagerActivity.this, "更新成功", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(ManagerActivity.this, "更新失败", Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
+
+    private void saveToLocal() {
+        Account account = new Account();
+        account.shop_id = uname;
+        account.shop_pwd = pwd;
+        account.shop_img_small = smallimg.getBytes();
+        account.shop_img_big = bigimg.getBytes();
+        account.shop_name = name;
+        account.shop_type = type;
+        account.shop_address = address;
+        account.shop_tel = tel;
+        account.shop_city = city;
+        account.shop_description = inform;
+
+        long column = dbAdapter.insert(account);
+        sharedPreferences.edit().clear().commit();
+        Log.e("column", String.valueOf(column));
+        if (column == -1) {
+            Toast.makeText(ManagerActivity.this, "信息保存失败！",
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            Log.e("基本信息", account.toString());
+            Toast.makeText(ManagerActivity.this, "信息保存成功！",
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private DBAdapter dbAdapter;
     private ImageButton mIBtnBack;
     private LinearLayout mLlayCity;
@@ -240,14 +268,10 @@ public class ManagerActivity extends AppCompatActivity {
 
     private void getData() {
 
-//        Intent i = getIntent();
-//        uname = i.getStringExtra("UNAME");
-//        pwd = i.getStringExtra("PWD");
-
-
-//        String name = i.getStringExtra("NAME");
-
         sharedPreferences = getSharedPreferences("ACCOUNT", Context.MODE_APPEND);
+
+        id = sharedPreferences.getString("ID", "");
+        ApiConfig.id = id;
         uname = sharedPreferences.getString("UNAME", "");
         pwd = sharedPreferences.getString("PWD", "");
         smallimg = sharedPreferences.getString("SIMG", "");
@@ -443,6 +467,20 @@ public class ManagerActivity extends AppCompatActivity {
             SharedPreferences.Editor editor = spf.edit();
             editor.putString("TYPE", types[index]);
             editor.commit();
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Network network = new Network();
+                    NameValuePair pairId = new BasicNameValuePair("id", String.valueOf(ApiConfig.id));
+                    NameValuePair pairName = new BasicNameValuePair("type", types[index]);
+                    result = network.sendJsonAndGet(ApiConfig.urlType, pairId, pairName);
+                    Log.e("id", ApiConfig.id);
+                    Message msg = new Message();
+                    h.sendMessage(msg);
+                }
+            }).start();
+
             dialog.dismiss();
         }
     }

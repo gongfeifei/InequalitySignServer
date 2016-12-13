@@ -50,6 +50,7 @@ public class Network {
                     string += sb;
                 }
             }
+            Log.e("string", string);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         } catch (UnsupportedEncodingException e) {

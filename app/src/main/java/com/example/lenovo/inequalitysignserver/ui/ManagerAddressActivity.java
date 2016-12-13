@@ -3,8 +3,11 @@ package com.example.lenovo.inequalitysignserver.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,6 +15,11 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.lenovo.inequalitysignserver.R;
+import com.example.lenovo.inequalitysignserver.config.ApiConfig;
+import com.example.lenovo.inequalitysignserver.https.Network;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 
 public class ManagerAddressActivity extends AppCompatActivity {
 
@@ -19,14 +27,40 @@ public class ManagerAddressActivity extends AppCompatActivity {
     private ImageButton mIBtnBack;
     private EditText mEtAddress;
     private ImageButton mIBtnCancel;
+    private String result = "";
+    private Handler h = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (result.equals("1")) {
+                Toast.makeText(ManagerAddressActivity.this, "更新成功", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(ManagerAddressActivity.this, "更新失败", Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
     private View.OnClickListener mOClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.BtnAddressSave:
-                    saveAddress();
+                    saveAddressToLocal();
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Network network = new Network();
+                            NameValuePair pairId = new BasicNameValuePair("id", String.valueOf(ApiConfig.id));
+                            NameValuePair pairName = new BasicNameValuePair("address", address);
+                            result = network.sendJsonAndGet(ApiConfig.urlAddress, pairId, pairName);
+                            Log.e("id", ApiConfig.id);
+                            Message msg = new Message();
+                            h.sendMessage(msg);
+                        }
+                    }).start();
                     break;
                 case R.id.IBtnAddressBack:
+                    Intent intent = new Intent(ManagerAddressActivity.this, ManagerActivity.class);
+                    startActivity(intent);
                     finish();
                     break;
                 case R.id.IBtnAddressCancel:
@@ -35,9 +69,10 @@ public class ManagerAddressActivity extends AppCompatActivity {
             }
         }
     };
+    private String address;
 
-    private void saveAddress() {
-        String address = mEtAddress.getText().toString();
+    private void saveAddressToLocal() {
+        address = mEtAddress.getText().toString();
         if (address.isEmpty()) {
             Toast.makeText(this, "请定位所在地址", Toast.LENGTH_SHORT).show();
         } else {

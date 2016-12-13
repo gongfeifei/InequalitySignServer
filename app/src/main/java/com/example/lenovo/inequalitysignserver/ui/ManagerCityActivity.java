@@ -3,8 +3,11 @@ package com.example.lenovo.inequalitysignserver.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -13,6 +16,11 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.lenovo.inequalitysignserver.R;
+import com.example.lenovo.inequalitysignserver.config.ApiConfig;
+import com.example.lenovo.inequalitysignserver.https.Network;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 
 import java.util.ArrayList;
 
@@ -26,6 +34,8 @@ public class ManagerCityActivity extends AppCompatActivity {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.IBtnCityBack:
+                    Intent intent = new Intent(ManagerCityActivity.this, ManagerActivity.class);
+                    startActivity(intent);
                     finish();
                     break;
             }
@@ -81,6 +91,18 @@ public class ManagerCityActivity extends AppCompatActivity {
     private ArrayAdapter<String> mProvinceAdapter;
     private ArrayAdapter<String> mCityAdapter;
     private static int pos;
+    private String result = "";
+    private Handler h = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (result.equals("1")) {
+                Toast.makeText(ManagerCityActivity.this, "更新成功", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(ManagerCityActivity.this, "更新失败", Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,15 +139,24 @@ public class ManagerCityActivity extends AppCompatActivity {
         mLvCity.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String city = citys[pos][position];
-//                        Toast.makeText(ManagerCityActivity.this, city, Toast.LENGTH_SHORT).show();
+                final String city = citys[pos][position];
                 SharedPreferences spf = getSharedPreferences("ACCOUNT", Context.MODE_APPEND);
                 SharedPreferences.Editor editor = spf.edit();
                 editor.putString("CITY", city);
                 editor.commit();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Network network = new Network();
+                        NameValuePair pairId = new BasicNameValuePair("id", String.valueOf(ApiConfig.id));
+                        NameValuePair pairName = new BasicNameValuePair("city", city);
+                        result = network.sendJsonAndGet(ApiConfig.urlCity, pairId, pairName);
+                        Log.e("id", ApiConfig.id);
+                        Message msg = new Message();
+                        h.sendMessage(msg);
+                    }
+                }).start();
                 Intent intent = new Intent(ManagerCityActivity.this, ManagerActivity.class);
-
-
                 startActivity(intent);
                 finish();
             }

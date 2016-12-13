@@ -58,6 +58,8 @@ public class ManagerDescription extends AppCompatActivity {
                     saveDescri();
                     break;
                 case R.id.IBtnDescriBack:
+                    Intent intent = new Intent(ManagerDescription.this, ManagerActivity.class);
+                    startActivity(intent);
                     finish();
                     break;
             }

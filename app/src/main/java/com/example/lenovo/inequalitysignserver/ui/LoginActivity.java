@@ -41,22 +41,27 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            if (result.equals("0")) {
-                Toast.makeText(LoginActivity.this, "用户名不存在！", Toast.LENGTH_SHORT).show();
-            } else if (result.equals("fail")) {
-                Toast.makeText(LoginActivity.this, "密码错误！", Toast.LENGTH_SHORT).show();
+            if (result.isEmpty()) {
+                Toast.makeText(LoginActivity.this, "网络连接不可用，请稍后重试！", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(LoginActivity.this, "登录成功！", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                SharedPreferences spf = getSharedPreferences("ACCOUNT", Context.MODE_APPEND);
-                SharedPreferences.Editor editor = spf.edit();
-                editor.putString("ID", result);
-                editor.putString("UNAME", mEtName.getText().toString());
-                editor.putString("PWD", mEtPwd.getText().toString());
-                editor.commit();
-                startActivity(intent);
-                finish();
+                if (result.equals("0")) {
+                    Toast.makeText(LoginActivity.this, "用户名不存在！", Toast.LENGTH_SHORT).show();
+                } else if (result.equals("fail")) {
+                    Toast.makeText(LoginActivity.this, "密码错误！", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(LoginActivity.this, "登录成功！", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    SharedPreferences spf = getSharedPreferences("ACCOUNT", Context.MODE_APPEND);
+                    SharedPreferences.Editor editor = spf.edit();
+                    editor.putString("ID", result);
+                    editor.putString("UNAME", mEtName.getText().toString());
+                    editor.putString("PWD", mEtPwd.getText().toString());
+                    editor.commit();
+                    startActivity(intent);
+                    finish();
+                }
             }
+
         }
     };
     private View.OnClickListener mOClickListener = new View.OnClickListener() {
@@ -65,7 +70,7 @@ public class LoginActivity extends AppCompatActivity {
             Intent intent = new Intent();
             switch (v.getId()) {
                 case R.id.BtnLogin:
-                    saveAccountToLocal();
+                    saveAccount2Local();
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -80,12 +85,13 @@ public class LoginActivity extends AppCompatActivity {
                     }).start();
 
 
-//                    if (mCbRemember.isChecked()) {
-//                        Account account = new Account();
-//                        account.shop_id = mEtName.getText().toString();
-//                        account.shop_pwd = mEtPwd.getText().toString();
-//                        dbAdapter.insert(account);
-//                    }
+                    if (mCbRemember.isChecked()) {
+                        SharedPreferences spf = getSharedPreferences("key", MODE_APPEND);
+                        SharedPreferences.Editor editor = spf.edit();
+                        editor.putString("uname", mEtName.getText().toString());
+                        editor.putString("pwd", mEtPwd.getText().toString());
+                        editor.commit();
+                    }
                     break;
                 case R.id.IBtnLoginSwitch:
                     if (isHidden) {
@@ -122,26 +128,24 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         findView();
         setListener();
+        setData();
+
+    }
+
+    private void setData() {
         mIBtnSwitch.setImageResource(R.drawable.hidepwd);
-
+        SharedPreferences spf = getSharedPreferences("key", MODE_APPEND);
+        String uname = spf.getString("uname", "");
+        String pwd = spf.getString("pwd", "");
+        mEtName.setText(uname);
+        mEtPwd.setText(pwd);
     }
 
-    private void getAccount() {
-        String name = mEtName.getText().toString();
-        if (!name.isEmpty()) {
-            Account[] accounts = dbAdapter.queryOneData(name);
-            if (accounts != null) {
-                mEtPwd.setText(accounts[0].shop_pwd);
-            }
-        }
 
-
-    }
-
-    private void saveAccountToLocal() {
+    private void saveAccount2Local() {
         SharedPreferences spf = getSharedPreferences("Account", Context.MODE_APPEND);
         SharedPreferences.Editor editor = spf.edit();
-        editor.putString("NAME", mEtName.getText().toString());
+        editor.putString("UNAME", mEtName.getText().toString());
         editor.putString("PWD", mEtPwd.getText().toString());
 
         editor.commit();
@@ -149,14 +153,7 @@ public class LoginActivity extends AppCompatActivity {
     private void setListener() {
         mBtnLogin.setOnClickListener(mOClickListener);
         mIBtnSwitch.setOnClickListener(mOClickListener);
-        mEtName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-//                    getAccount();
-                }
-            }
-        });
+
         mBtnRegister.setOnClickListener(mOClickListener);
     }
 

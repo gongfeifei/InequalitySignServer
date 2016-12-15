@@ -1,51 +1,32 @@
 package com.example.lenovo.inequalitysignserver.ui;
 
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import com.example.lenovo.inequalitysignserver.R;
+import com.example.lenovo.inequalitysignserver.config.ApiConfig;
+import com.example.lenovo.inequalitysignserver.https.Network;
 import com.example.lenovo.inequalitysignserver.widget.SatelliteMenu;
 import com.example.lenovo.inequalitysignserver.widget.SatelliteMenuItem;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button mBtnManager;
-    private Button mBtnType;
-    private Button mBtnCall;
-    private Button mBtnInquiry;
-    private View.OnClickListener mOClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Intent intent = new Intent();
-            switch (v.getId()) {
-//                case R.id.BtnMainManage:
-//                    intent.setClass(MainActivity.this, ManagerActivity.class);
-//                    startActivity(intent);
-//                    break;
-//                case R.id.BtnMainType:
-//                    intent.setClass(MainActivity.this, TypeActivity.class);
-//                    startActivity(intent);
-//                    break;
-//                case R.id.BtnMainCall:
-//                    intent.setClass(MainActivity.this, CallActivity.class);
-//                    startActivity(intent);
-//                    break;
-//                case R.id.BtnMainInquiry:
-//                    intent.setClass(MainActivity.this, InquiryActivity.class);
-//                    startActivity(intent);
-//                    break;
-            }
-        }
-    };
     private SatelliteMenu mSatMenu;
     private Button mBtnClick;
     private Button mBtnCode;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent();
                 switch (id) {
                     case 1:
+
                         intent.setClass(MainActivity.this, ManagerActivity.class);
                         startActivity(intent);
                         break;
@@ -102,10 +84,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void findView() {
-//        mBtnManager = (Button) findViewById(R.id.BtnMainManage);
-//        mBtnType = (Button) findViewById(R.id.BtnMainType);
-//        mBtnCall = (Button) findViewById(R.id.BtnMainCall);
-//        mBtnInquiry = (Button) findViewById(R.id.BtnMainInquiry);
+
         mSatMenu = (SatelliteMenu) findViewById(R.id.SatMenuMain);
         mBtnClick = (Button) findViewById(R.id.BtnMainClick);
         mBtnCode = (Button) findViewById(R.id.BtnMainCode);

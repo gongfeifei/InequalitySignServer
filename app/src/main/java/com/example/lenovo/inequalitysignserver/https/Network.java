@@ -1,7 +1,18 @@
 package com.example.lenovo.inequalitysignserver.https;
 
+import android.content.Context;
+import android.os.Environment;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.example.lenovo.inequalitysignserver.config.ApiConfig;
+import com.example.lenovo.inequalitysignserver.entity.Account;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.apache.http.Consts;
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -9,15 +20,28 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HTTP;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +50,15 @@ import java.util.List;
  */
 public class Network {
     private String string = "";
+    private List<Account> ls = new ArrayList<>();
+    private String uploadStr = "";
 
+    /**
+     * 上传数据，返回结果
+     * @param u
+     * @param pairs
+     * @return
+     */
     public String sendJsonAndGet(String u, NameValuePair... pairs) {
 
         URI url = null;
@@ -62,6 +94,65 @@ public class Network {
         }
 
         return string;
+    }
+
+
+
+    /**
+     * 解析Json数组形式的结果值，返回List列表形式
+     * @param s
+     * @return
+     */
+    public List<Account> parserShop(String s) {
+        try {
+            JSONArray array = new JSONArray(s);
+            for(int i =0 ; i < array.length();i++){
+                JSONObject object = array.getJSONObject(i);
+                String tel = object.getString("shop_tel");
+                String city = object.getString("shop_city");
+                String inform = object.getString("shop_description");
+                String type = object.getString("shop_type");
+                String imgsmall = object.getString("shop_img_small");
+                String imgbig = object.getString("shop_img_big");
+                String name = object.getString("shop_name");
+                String adddress = object.getString("shop_address");
+                ls.add(new Account(imgsmall.getBytes(), imgbig.getBytes(), name, type, adddress, tel, city, inform));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return ls;
+    }
+
+    /**
+     * 文件上传
+     * @param context
+     * @param localFile
+     */
+    public void postFile(final Context context, String localFile) {
+        File file = new File(localFile);
+        if (file.exists() && file.length() > 0) {
+            AsyncHttpClient client = new AsyncHttpClient();
+            RequestParams params = new RequestParams();
+            try {
+                params.put("smallimg_url", file);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            client.post(ApiConfig.urlSmallimg, params, new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(int i, Header[] headers, byte[] bytes) {
+                    Toast.makeText(context, "更新成功", Toast.LENGTH_LONG).show();
+                }
+
+                @Override
+                public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
+                    Toast.makeText(context, "更新失败", Toast.LENGTH_LONG).show();
+                }
+            });
+        } else {
+            Toast.makeText(context, "图片不支持", Toast.LENGTH_LONG).show();
+        }
     }
 
 }

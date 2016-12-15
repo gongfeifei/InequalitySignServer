@@ -41,6 +41,8 @@ import com.example.lenovo.inequalitysignserver.adapter.DBAdapter;
 import com.example.lenovo.inequalitysignserver.config.ApiConfig;
 import com.example.lenovo.inequalitysignserver.entity.Account;
 import com.example.lenovo.inequalitysignserver.https.Network;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.RequestParams;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -49,6 +51,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ManagerActivity extends AppCompatActivity {
 
@@ -126,7 +130,7 @@ public class ManagerActivity extends AppCompatActivity {
                     finish();
                     break;
                 case R.id.BtnManagerSave:   //保存我的商家信息
-                    saveToLocal();
+                    save2Local();
 
                     finish();
                     break;
@@ -139,15 +143,42 @@ public class ManagerActivity extends AppCompatActivity {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            if (result.equals("1")) {
-                Toast.makeText(ManagerActivity.this, "更新成功", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(ManagerActivity.this, "更新失败", Toast.LENGTH_SHORT).show();
+            if (msg.what == 0) {   //0 商家类型；
+                if (result.equals("1")) {
+                    Toast.makeText(ManagerActivity.this, "更新成功", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(ManagerActivity.this, "更新失败", Toast.LENGTH_SHORT).show();
+                }
+            } else if (msg.what == 1) {     //获取基本信息的进程
+                String s = Base64.encodeToString(lshop.get(0).shop_img_small, Base64.DEFAULT);
+                if (s != null) {
+                    smallimg = s;
+                }
+//                if (!smallimg.isEmpty()) {
+//                    byte []b = lshop.get(0).shop_img_small;
+//                    bitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
+//                    mIvHead.setImageBitmap(bitmap);
+//                }
+
+                name = lshop.get(0).shop_name;
+                type = lshop.get(0).shop_type;
+                inform = lshop.get(0).shop_description;
+                city = lshop.get(0).shop_city;
+                address = lshop.get(0).shop_address;
+                tel = lshop.get(0).shop_tel;
+                mTvName.setText(name);
+                mTvType.setText(type);
+                mTvDescri.setText(inform);
+                mTvCity.setText(city);
+                mTvAddress.setText(address);
+                mTvTel.setText(tel);
             }
+
         }
     };
+    private List<Account> lshop = new ArrayList<>();
 
-    private void saveToLocal() {
+    private void save2Local() {
         Account account = new Account();
         account.shop_id = uname;
         account.shop_pwd = pwd;
@@ -251,13 +282,40 @@ public class ManagerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manager);
+
         createCameraTempFile(savedInstanceState);
         i = 0;
         dbAdapter = new DBAdapter(this);
         dbAdapter.open();
         findView();
         setListener();
-        getData();
+
+        getDataFromLocal();
+        getDataFromNetwork();
+    }
+
+    /**
+     * 向服务器发送请求并获得商家基本信息
+     */
+    private void getDataFromNetwork() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Network network = new Network();
+                NameValuePair pairId = new BasicNameValuePair("id", String.valueOf(ApiConfig.id));
+                result = network.sendJsonAndGet(ApiConfig.urlMessage, pairId);
+                lshop = network.parserShop(result);
+                SharedPreferences spf = getSharedPreferences("ACCOUNT", MODE_APPEND);
+                SharedPreferences.Editor editor = spf.edit();
+                String string = Base64.encodeToString(lshop.get(0).shop_img_big, Base64.DEFAULT);
+                editor.putString("BIMG", string);
+                editor.commit();
+                Log.e("id", ApiConfig.id);
+                Message msg = new Message();
+                msg.what = 1;   //标识获取基本信息的进程
+                h.sendMessage(msg);
+            }
+        }).start();
     }
 
     @Override
@@ -266,7 +324,7 @@ public class ManagerActivity extends AppCompatActivity {
         dbAdapter.close();
     }
 
-    private void getData() {
+    private void getDataFromLocal() {
 
         sharedPreferences = getSharedPreferences("ACCOUNT", Context.MODE_APPEND);
 
@@ -351,7 +409,7 @@ public class ManagerActivity extends AppCompatActivity {
                     if (uri == null) {
                         return;
                     }
-                    String cropImagePath = getRealFilePathFromUri(getApplicationContext(), uri);
+                    final String cropImagePath = getRealFilePathFromUri(getApplicationContext(), uri);
                     Bitmap bitMap = BitmapFactory.decodeFile(cropImagePath);
                     mIvHead.setImageBitmap(bitMap);
 
@@ -361,12 +419,15 @@ public class ManagerActivity extends AppCompatActivity {
                     ByteArrayOutputStream os = new ByteArrayOutputStream();
                     bitMap.compress(Bitmap.CompressFormat.PNG, 100, os);//图片压缩，30代表压缩率，压缩了70%
                     byte[] smallBytes = os.toByteArray();
-                    String string = Base64.encodeToString(smallBytes, Base64.DEFAULT);
+                    final String string = Base64.encodeToString(smallBytes, Base64.DEFAULT);
                     SharedPreferences spf = getSharedPreferences("ACCOUNT", Context.MODE_APPEND);
                     SharedPreferences.Editor editor = spf.edit();
                     editor.putString("SIMG", string);
                     editor.commit();
 
+                    //请求并修改用户小图标
+                    Network network = new Network();
+                    network.postFile(ManagerActivity.this, cropImagePath);
                 }
                 break;
         }
@@ -468,15 +529,17 @@ public class ManagerActivity extends AppCompatActivity {
             editor.putString("TYPE", types[index]);
             editor.commit();
 
+            //请求并修改商家类型
             new Thread(new Runnable() {
                 @Override
                 public void run() {
                     Network network = new Network();
                     NameValuePair pairId = new BasicNameValuePair("id", String.valueOf(ApiConfig.id));
-                    NameValuePair pairName = new BasicNameValuePair("type", types[index]);
-                    result = network.sendJsonAndGet(ApiConfig.urlType, pairId, pairName);
+                    NameValuePair pairType = new BasicNameValuePair("type", types[index]);
+                    result = network.sendJsonAndGet(ApiConfig.urlType, pairId, pairType);
                     Log.e("id", ApiConfig.id);
                     Message msg = new Message();
+                    msg.what = 0;   //标识修改商家类型的进程
                     h.sendMessage(msg);
                 }
             }).start();

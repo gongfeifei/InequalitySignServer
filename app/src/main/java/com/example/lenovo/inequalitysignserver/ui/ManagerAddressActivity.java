@@ -44,14 +44,14 @@ public class ManagerAddressActivity extends AppCompatActivity {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.BtnAddressSave:
-                    saveAddressToLocal();
+                    saveAddress2Local();
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
                             Network network = new Network();
                             NameValuePair pairId = new BasicNameValuePair("id", String.valueOf(ApiConfig.id));
-                            NameValuePair pairName = new BasicNameValuePair("address", address);
-                            result = network.sendJsonAndGet(ApiConfig.urlAddress, pairId, pairName);
+                            NameValuePair pairAddress = new BasicNameValuePair("address", address);
+                            result = network.sendJsonAndGet(ApiConfig.urlAddress, pairId, pairAddress);
                             Log.e("id", ApiConfig.id);
                             Message msg = new Message();
                             h.sendMessage(msg);
@@ -71,7 +71,7 @@ public class ManagerAddressActivity extends AppCompatActivity {
     };
     private String address;
 
-    private void saveAddressToLocal() {
+    private void saveAddress2Local() {
         address = mEtAddress.getText().toString();
         if (address.isEmpty()) {
             Toast.makeText(this, "请定位所在地址", Toast.LENGTH_SHORT).show();

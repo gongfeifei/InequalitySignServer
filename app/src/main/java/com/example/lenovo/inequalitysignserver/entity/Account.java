@@ -16,6 +16,17 @@ public class Account {
     public String shop_city;
     public String shop_description;
 
+    public Account(byte[] shop_img_small, byte[] shop_img_big, String shop_name, String shop_type, String shop_address, String shop_tel, String shop_city, String shop_description) {
+        this.shop_img_small = shop_img_small;
+        this.shop_img_big = shop_img_big;
+        this.shop_name = shop_name;
+        this.shop_type = shop_type;
+        this.shop_address = shop_address;
+        this.shop_tel = shop_tel;
+        this.shop_city = shop_city;
+        this.shop_description = shop_description;
+    }
+
     public Account() {
 //        this.shop_id = "";
 //        this.shop_pwd = "";
@@ -32,7 +43,7 @@ public class Account {
     @Override
     public String toString() {
         String result = "";
-//        result += "ID:" + this.id + ",";
+        result += "ID:" + this.id + ",";
         result += "用户名:" + this.shop_id + ",";
         result += "密码:" + shop_pwd + ",";
         result += "商家图片（小）:" + this.shop_img_small + ",";

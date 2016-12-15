@@ -9,11 +9,14 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Base64;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +31,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.lenovo.inequalitysignserver.R;
+import com.example.lenovo.inequalitysignserver.config.ApiConfig;
+import com.example.lenovo.inequalitysignserver.https.Network;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -47,6 +55,18 @@ public class ManagerDescription extends AppCompatActivity {
     private ImageView mIvPic;
     private Button mBtnSave;
     private ImageButton mIBtnBack;
+    private String result = "";
+    private Handler h = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (result.equals("1")) {
+                Toast.makeText(ManagerDescription.this, "更新成功", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(ManagerDescription.this, "更新失败", Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
     private View.OnClickListener mOClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -55,7 +75,19 @@ public class ManagerDescription extends AppCompatActivity {
                     uploadHeadImage();
                     break;
                 case R.id.BtnDescriSave:
-                    saveDescri();
+                    saveDescri2Local();
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Network network = new Network();
+                            NameValuePair pairId = new BasicNameValuePair("id", String.valueOf(ApiConfig.id));
+                            NameValuePair pairInform = new BasicNameValuePair("description", inform);
+                            result = network.sendJsonAndGet(ApiConfig.urlDescri, pairId, pairInform);
+                            Log.e("id", ApiConfig.id);
+                            Message msg = new Message();
+                            h.sendMessage(msg);
+                        }
+                    }).start();
                     break;
                 case R.id.IBtnDescriBack:
                     Intent intent = new Intent(ManagerDescription.this, ManagerActivity.class);
@@ -65,9 +97,10 @@ public class ManagerDescription extends AppCompatActivity {
             }
         }
     };
+    private String inform;
 
-    private void saveDescri() {
-        String inform = mEtInform.getText().toString();
+    private void saveDescri2Local() {
+        inform = mEtInform.getText().toString();
         if (inform.isEmpty()) {
             Toast.makeText(this, "请填写描述信息", Toast.LENGTH_SHORT).show();
         } else {

@@ -149,8 +149,8 @@ public class ManagerCityActivity extends AppCompatActivity {
                     public void run() {
                         Network network = new Network();
                         NameValuePair pairId = new BasicNameValuePair("id", String.valueOf(ApiConfig.id));
-                        NameValuePair pairName = new BasicNameValuePair("city", city);
-                        result = network.sendJsonAndGet(ApiConfig.urlCity, pairId, pairName);
+                        NameValuePair pairCity = new BasicNameValuePair("city", city);
+                        result = network.sendJsonAndGet(ApiConfig.urlCity, pairId, pairCity);
                         Log.e("id", ApiConfig.id);
                         Message msg = new Message();
                         h.sendMessage(msg);

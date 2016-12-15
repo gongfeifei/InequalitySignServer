@@ -43,14 +43,14 @@ public class ManagerTelActivity extends AppCompatActivity {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.BtnTelSave:
-                    saveTelToLocal();
+                    saveTel2Local();
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
                             Network network = new Network();
                             NameValuePair pairId = new BasicNameValuePair("id", String.valueOf(ApiConfig.id));
-                            NameValuePair pairName = new BasicNameValuePair("tel", tel);
-                            result = network.sendJsonAndGet(ApiConfig.urlTel, pairId, pairName);
+                            NameValuePair pairTel = new BasicNameValuePair("tel", tel);
+                            result = network.sendJsonAndGet(ApiConfig.urlTel, pairId, pairTel);
                             Log.e("id", ApiConfig.id);
                             Message msg = new Message();
                             h.sendMessage(msg);
@@ -70,7 +70,7 @@ public class ManagerTelActivity extends AppCompatActivity {
     };
     private String tel;
 
-    private void saveTelToLocal() {
+    private void saveTel2Local() {
         tel = mEtTel.getText().toString();
         if (tel.isEmpty()) {
             Toast.makeText(this, "请输入联系方式", Toast.LENGTH_SHORT).show();

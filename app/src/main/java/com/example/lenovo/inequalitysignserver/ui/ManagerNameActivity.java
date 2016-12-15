@@ -46,7 +46,7 @@ public class ManagerNameActivity extends AppCompatActivity {
             Intent intent = new Intent();
             switch (v.getId()) {
                 case R.id.BtnNameSave:
-                    saveNameToLocal();
+                    saveName2Local();
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -78,7 +78,7 @@ public class ManagerNameActivity extends AppCompatActivity {
     private DBAdapter dbAdapter;
     private String name;
 
-    private void saveNameToLocal() {
+    private void saveName2Local() {
         name = mEtName.getText().toString();
         if (name.isEmpty()) {
             Toast.makeText(this, "请输入商家名称", Toast.LENGTH_SHORT).show();

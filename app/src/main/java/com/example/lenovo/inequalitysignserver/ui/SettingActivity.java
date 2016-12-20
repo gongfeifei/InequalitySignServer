@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.example.lenovo.inequalitysignserver.R;
 
@@ -22,14 +23,13 @@ public class SettingActivity extends AppCompatActivity {
     private View.OnClickListener mOClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent();
+            final Intent intent = new Intent();
             switch (v.getId()) {
                 case R.id.IBtnSettingBack:
                     finish();
                     break;
                 case R.id.LlaySettingName:
-                    intent.setClass(SettingActivity.this, SettingNameActivity.class);
-                    startActivity(intent);
+                    Toast.makeText(SettingActivity.this, "", Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.LlaySettingPwd:
                     intent.setClass(SettingActivity.this, SettingPwdActivity.class);
@@ -42,7 +42,6 @@ public class SettingActivity extends AppCompatActivity {
                     builder.setPositiveButton("退出", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            finish();
                             finish();
                         }
                     });
@@ -57,6 +56,14 @@ public class SettingActivity extends AppCompatActivity {
             }
         }
     };
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 10) {
+            finishActivity(10);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

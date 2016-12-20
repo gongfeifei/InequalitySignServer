@@ -1,5 +1,7 @@
 package com.example.lenovo.inequalitysignserver.config;
 
+import android.app.Activity;
+
 /**
  * Created by lenovo on 2016/12/12.
  */

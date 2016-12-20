@@ -1,5 +1,6 @@
 package com.example.lenovo.inequalitysignserver.ui;
 
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -40,7 +41,9 @@ import android.widget.Toast;
 
 import com.example.lenovo.inequalitysignserver.R;
 import com.example.lenovo.inequalitysignserver.adapter.DBAdapter;
+import com.example.lenovo.inequalitysignserver.config.ActivityManagerApplication;
 import com.example.lenovo.inequalitysignserver.config.ApiConfig;
+import com.example.lenovo.inequalitysignserver.config.UILApplication;
 import com.example.lenovo.inequalitysignserver.entity.Account;
 import com.example.lenovo.inequalitysignserver.https.Network;
 import com.loopj.android.http.AsyncHttpClient;

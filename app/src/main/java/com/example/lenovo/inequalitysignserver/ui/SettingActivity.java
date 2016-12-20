@@ -12,6 +12,9 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.lenovo.inequalitysignserver.R;
+import com.example.lenovo.inequalitysignserver.config.ActivityManagerApplication;
+import com.example.lenovo.inequalitysignserver.config.ApiConfig;
+import com.example.lenovo.inequalitysignserver.config.UILApplication;
 
 public class SettingActivity extends AppCompatActivity {
 
@@ -42,7 +45,10 @@ public class SettingActivity extends AppCompatActivity {
                     builder.setPositiveButton("退出", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            intent.setClass(SettingActivity.this, LoginActivity.class);
+                            startActivity(intent);
                             finish();
+                            ActivityManagerApplication.destoryActivity("MainActivity");
                         }
                     });
                     builder.setNegativeButton("取消", null);

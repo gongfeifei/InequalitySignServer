@@ -1,5 +1,6 @@
 package com.example.lenovo.inequalitysignserver.config;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 
@@ -8,10 +9,15 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * Created by lenovo on 2016/11/24.
  */
 public class UILApplication extends Application {
+
     @Override
     public void onCreate() {
         super.onCreate();

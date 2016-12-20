@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.lenovo.inequalitysignserver.R;
+import com.example.lenovo.inequalitysignserver.config.ActivityManagerApplication;
 import com.example.lenovo.inequalitysignserver.config.ApiConfig;
 import com.example.lenovo.inequalitysignserver.entity.Ordertype;
 import com.example.lenovo.inequalitysignserver.https.Network;
@@ -106,6 +107,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ActivityManagerApplication.addDestoryActivity(this, "MainActivity");
+
         setContentView(R.layout.activity_main);
         findView();
         setSatMenu();

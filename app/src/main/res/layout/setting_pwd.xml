@@ -33,13 +33,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <EditText
-        android:hint="6-16个字符，区分大小写"
-        android:inputType="textPassword"
-        android:id="@+id/EtSetOldpwd"
+    android:hint="6-16个字符，区分大小写"
+    android:inputType="textPassword"
+    android:id="@+id/EtSetOldpwd"
+    android:padding="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:background="@drawable/tvbar"/>
+    <TextView
+        android:textColor="@android:color/holo_red_light"
+        android:text=""
+        android:id="@+id/TvSetShow1"
         android:padding="10dp"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@drawable/tvbar"/>
+        android:layout_height="wrap_content" />
     <TextView
         android:layout_margin = "10dp"
         android:text="新密码："
@@ -54,6 +61,13 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@drawable/tvbar"/>
+    <TextView
+        android:textColor="@android:color/holo_red_light"
+        android:text=""
+        android:id="@+id/TvSetShow2"
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
     <CheckBox
         android:id="@+id/CbPwdShow"
         android:layout_margin="10dp"

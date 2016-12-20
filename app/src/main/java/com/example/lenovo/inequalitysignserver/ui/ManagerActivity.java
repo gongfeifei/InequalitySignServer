@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -16,6 +17,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -43,6 +45,9 @@ import com.example.lenovo.inequalitysignserver.entity.Account;
 import com.example.lenovo.inequalitysignserver.https.Network;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.display.CircleBitmapDisplayer;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -130,7 +135,7 @@ public class ManagerActivity extends AppCompatActivity {
                     finish();
                     break;
                 case R.id.BtnManagerSave:   //保存我的商家信息
-                    save2Local();
+//                    save2Local();
 
                     finish();
                     break;
@@ -150,40 +155,48 @@ public class ManagerActivity extends AppCompatActivity {
                     Toast.makeText(ManagerActivity.this, "更新失败", Toast.LENGTH_SHORT).show();
                 }
             } else if (msg.what == 1) {     //获取基本信息的进程
-                String s = Base64.encodeToString(lshop.get(0).shop_img_small, Base64.DEFAULT);
-                if (s != null) {
-                    smallimg = s;
-                }
-//                if (!smallimg.isEmpty()) {
-//                    byte []b = lshop.get(0).shop_img_small;
-//                    bitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
-//                    mIvHead.setImageBitmap(bitmap);
-//                }
-
+                smallimg = lshop.get(0).shop_img_small;
+                bigimg = lshop.get(0).shop_img_big;
                 name = lshop.get(0).shop_name;
                 type = lshop.get(0).shop_type;
                 inform = lshop.get(0).shop_description;
                 city = lshop.get(0).shop_city;
                 address = lshop.get(0).shop_address;
                 tel = lshop.get(0).shop_tel;
-                mTvName.setText(name);
-                mTvType.setText(type);
-                mTvDescri.setText(inform);
-                mTvCity.setText(city);
-                mTvAddress.setText(address);
-                mTvTel.setText(tel);
+
+                ImageLoader.getInstance().displayImage(smallimg, mIvHead);
+                if (name != null) {
+                    mTvName.setText(name);
+                }
+                if (type != null) {
+                    mTvType.setText(type);
+                }
+                if (inform != null) {
+                    mTvDescri.setText(inform);
+                }
+                if (city != null) {
+                    mTvCity.setText(city);
+                }
+                if (address != null) {
+                    mTvAddress.setText(address);
+                }
+                if (tel != null) {
+                    mTvTel.setText(tel);
+                }
+
             }
 
         }
     };
     private List<Account> lshop = new ArrayList<>();
+    private DisplayImageOptions options;
 
     private void save2Local() {
         Account account = new Account();
         account.shop_id = uname;
         account.shop_pwd = pwd;
-        account.shop_img_small = smallimg.getBytes();
-        account.shop_img_big = bigimg.getBytes();
+        account.shop_img_small = smallimg;
+        account.shop_img_big = bigimg;
         account.shop_name = name;
         account.shop_type = type;
         account.shop_address = address;
@@ -234,7 +247,7 @@ public class ManagerActivity extends AppCompatActivity {
         TextView mTvPhoto = (TextView) view.findViewById(R.id.TvPopupPhoto);
         TextView mTvCancel = (TextView) view.findViewById(R.id.TvPopupCancel);
         final PopupWindow popupWindow = new PopupWindow(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        popupWindow.setBackgroundDrawable(getResources().getDrawable(android.R.color.transparent));
+        popupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), android.R.color.transparent, null));
         popupWindow.setOutsideTouchable(false);
         popupWindow.setFocusable(true);
         View parent = LayoutInflater.from(this).inflate(R.layout.activity_manager, null);
@@ -289,9 +302,22 @@ public class ManagerActivity extends AppCompatActivity {
         dbAdapter.open();
         findView();
         setListener();
-
-        getDataFromLocal();
+        initImageOptions();
+        getAccountId();
+//        getDataFromLocal();
         getDataFromNetwork();
+    }
+
+    private void initImageOptions() {
+        options = new DisplayImageOptions.Builder()
+                .showImageOnLoading(R.drawable.ic_stub)
+                .showImageForEmptyUri(R.drawable.ic_empty)
+                .showImageOnFail(R.drawable.ic_error)
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .considerExifParams(true)
+                .displayer(new CircleBitmapDisplayer(Color.WHITE, 5))
+                .build();
     }
 
     /**
@@ -307,8 +333,8 @@ public class ManagerActivity extends AppCompatActivity {
                 lshop = network.parserShop(result);
                 SharedPreferences spf = getSharedPreferences("ACCOUNT", MODE_APPEND);
                 SharedPreferences.Editor editor = spf.edit();
-                String string = Base64.encodeToString(lshop.get(0).shop_img_big, Base64.DEFAULT);
-                editor.putString("BIMG", string);
+//                String string = Base64.encodeToString(lshop.get(0).shop_img_big, Base64.DEFAULT);
+                editor.putString("BIMG", bigimg);
                 editor.commit();
                 Log.e("id", ApiConfig.id);
                 Message msg = new Message();
@@ -324,6 +350,12 @@ public class ManagerActivity extends AppCompatActivity {
         dbAdapter.close();
     }
 
+    private void getAccountId() {
+        sharedPreferences = getSharedPreferences("ACCOUNT", Context.MODE_APPEND);
+
+        id = sharedPreferences.getString("ID", "");
+        ApiConfig.id = id;
+    }
     private void getDataFromLocal() {
 
         sharedPreferences = getSharedPreferences("ACCOUNT", Context.MODE_APPEND);

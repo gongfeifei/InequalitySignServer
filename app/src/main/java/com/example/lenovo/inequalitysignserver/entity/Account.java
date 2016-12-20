@@ -7,8 +7,8 @@ public class Account {
     public int id;
     public String shop_id;
     public String shop_pwd;
-    public byte[] shop_img_small;
-    public byte[] shop_img_big;
+    public String shop_img_small;
+    public String shop_img_big;
     public String shop_name;
     public String shop_type;
     public String shop_address;
@@ -16,7 +16,7 @@ public class Account {
     public String shop_city;
     public String shop_description;
 
-    public Account(byte[] shop_img_small, byte[] shop_img_big, String shop_name, String shop_type, String shop_address, String shop_tel, String shop_city, String shop_description) {
+    public Account(String shop_img_small, String shop_img_big, String shop_name, String shop_type, String shop_address, String shop_tel, String shop_city, String shop_description) {
         this.shop_img_small = shop_img_small;
         this.shop_img_big = shop_img_big;
         this.shop_name = shop_name;

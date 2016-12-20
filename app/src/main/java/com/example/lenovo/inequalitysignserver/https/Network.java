@@ -1,17 +1,16 @@
 package com.example.lenovo.inequalitysignserver.https;
 
 import android.content.Context;
-import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.example.lenovo.inequalitysignserver.config.ApiConfig;
 import com.example.lenovo.inequalitysignserver.entity.Account;
+import com.example.lenovo.inequalitysignserver.entity.Ordertype;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
-import org.apache.http.Consts;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -20,14 +19,8 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,8 +33,6 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URLEncoder;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,6 +42,7 @@ import java.util.List;
 public class Network {
     private String string = "";
     private List<Account> ls = new ArrayList<>();
+    private List<Ordertype> ltype = new ArrayList<>();
     private String uploadStr = "";
 
     /**
@@ -116,12 +108,32 @@ public class Network {
                 String imgbig = object.getString("shop_img_big");
                 String name = object.getString("shop_name");
                 String adddress = object.getString("shop_address");
-                ls.add(new Account(imgsmall.getBytes(), imgbig.getBytes(), name, type, adddress, tel, city, inform));
+                ls.add(new Account(imgsmall, imgbig, name, type, adddress, tel, city, inform));
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return ls;
+    }
+
+    /**
+     * 解析Json对象形式的结果值，返回List列表形式
+     * @param s
+     * @return
+     */
+    public List<Ordertype> parserType(String s) {
+        try {
+            JSONObject object = new JSONObject(s);
+            String type1 = object.getString("name_type1");
+            String type2 = object.getString("name_type2");
+            String type3 = object.getString("name_type3");
+            Log.e("type", type1 + " " + type2 + " " + type3);
+            ltype.add(new Ordertype(type1, type2, type3));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return ltype;
     }
 
     /**
@@ -135,6 +147,7 @@ public class Network {
             AsyncHttpClient client = new AsyncHttpClient();
             RequestParams params = new RequestParams();
             try {
+                params.put("id", ApiConfig.id);
                 params.put("smallimg_url", file);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -142,6 +155,7 @@ public class Network {
             client.post(ApiConfig.urlSmallimg, params, new AsyncHttpResponseHandler() {
                 @Override
                 public void onSuccess(int i, Header[] headers, byte[] bytes) {
+                    Log.e("bytes", new String(bytes));
                     Toast.makeText(context, "更新成功", Toast.LENGTH_LONG).show();
                 }
 

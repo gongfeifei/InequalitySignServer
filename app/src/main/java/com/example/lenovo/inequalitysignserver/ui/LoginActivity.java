@@ -56,6 +56,7 @@ public class LoginActivity extends AppCompatActivity {
                     editor.putString("ID", result);
                     editor.putString("UNAME", mEtName.getText().toString());
                     editor.putString("PWD", mEtPwd.getText().toString());
+                    ApiConfig.pwd = mEtPwd.getText().toString();
                     editor.commit();
                     startActivity(intent);
                     finish();
@@ -84,13 +85,14 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     }).start();
 
-
                     if (mCbRemember.isChecked()) {
                         SharedPreferences spf = getSharedPreferences("key", MODE_APPEND);
                         SharedPreferences.Editor editor = spf.edit();
                         editor.putString("uname", mEtName.getText().toString());
                         editor.putString("pwd", mEtPwd.getText().toString());
                         editor.commit();
+                    }else {
+                        spf.edit().clear().commit();
                     }
                     break;
                 case R.id.IBtnLoginSwitch:
@@ -121,6 +123,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     };
     private Button mBtnRegister;
+    private SharedPreferences spf;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,7 +137,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void setData() {
         mIBtnSwitch.setImageResource(R.drawable.hidepwd);
-        SharedPreferences spf = getSharedPreferences("key", MODE_APPEND);
+        spf = getSharedPreferences("key", MODE_APPEND);
         String uname = spf.getString("uname", "");
         String pwd = spf.getString("pwd", "");
         mEtName.setText(uname);

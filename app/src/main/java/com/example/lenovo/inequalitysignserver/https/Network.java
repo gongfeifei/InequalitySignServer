@@ -155,8 +155,14 @@ public class Network {
             client.post(ApiConfig.urlSmallimg, params, new AsyncHttpResponseHandler() {
                 @Override
                 public void onSuccess(int i, Header[] headers, byte[] bytes) {
-                    Log.e("bytes", new String(bytes));
-                    Toast.makeText(context, "更新成功", Toast.LENGTH_LONG).show();
+                    String result = new String(bytes);
+                    Log.e("bytes", result);
+                    if (result.equals("1")) {
+                        Toast.makeText(context, "更新成功", Toast.LENGTH_LONG).show();
+                    } else if (result.equals("0")) {
+                        Toast.makeText(context, "更新失败", Toast.LENGTH_LONG).show();
+                    }
+
                 }
 
                 @Override

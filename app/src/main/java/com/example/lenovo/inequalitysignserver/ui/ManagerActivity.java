@@ -167,6 +167,13 @@ public class ManagerActivity extends AppCompatActivity {
                 address = lshop.get(0).shop_address;
                 tel = lshop.get(0).shop_tel;
 
+                SharedPreferences spf = getSharedPreferences("ACCOUNT", MODE_APPEND);
+                SharedPreferences.Editor editor = spf.edit();
+//                String string = Base64.encodeToString(lshop.get(0).shop_img_big, Base64.DEFAULT);
+                editor.putString("BIMG", bigimg);
+                editor.putString("INFORM", inform);
+                editor.commit();
+
                 ImageLoader.getInstance().displayImage(smallimg, mIvHead);
                 if (name != null) {
                     mTvName.setText(name);
@@ -334,11 +341,7 @@ public class ManagerActivity extends AppCompatActivity {
                 NameValuePair pairId = new BasicNameValuePair("id", String.valueOf(ApiConfig.id));
                 result = network.sendJsonAndGet(ApiConfig.urlMessage, pairId);
                 lshop = network.parserShop(result);
-                SharedPreferences spf = getSharedPreferences("ACCOUNT", MODE_APPEND);
-                SharedPreferences.Editor editor = spf.edit();
-//                String string = Base64.encodeToString(lshop.get(0).shop_img_big, Base64.DEFAULT);
-                editor.putString("BIMG", bigimg);
-                editor.commit();
+
                 Log.e("id", ApiConfig.id);
                 Message msg = new Message();
                 msg.what = 1;   //标识获取基本信息的进程
@@ -462,7 +465,7 @@ public class ManagerActivity extends AppCompatActivity {
 
                     //请求并修改用户小图标
                     Network network = new Network();
-                    network.postFile(ManagerActivity.this, cropImagePath);
+                    network.postFile(ManagerActivity.this, cropImagePath, ApiConfig.urlSmallimg);
                 }
                 break;
         }

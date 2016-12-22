@@ -141,7 +141,7 @@ public class Network {
      * @param context
      * @param localFile
      */
-    public void postFile(final Context context, String localFile) {
+    public void postFile(final Context context, String localFile, String url) {
         File file = new File(localFile);
         if (file.exists() && file.length() > 0) {
             AsyncHttpClient client = new AsyncHttpClient();
@@ -152,7 +152,7 @@ public class Network {
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
-            client.post(ApiConfig.urlSmallimg, params, new AsyncHttpResponseHandler() {
+            client.post(url, params, new AsyncHttpResponseHandler() {
                 @Override
                 public void onSuccess(int i, Header[] headers, byte[] bytes) {
                     String result = new String(bytes);

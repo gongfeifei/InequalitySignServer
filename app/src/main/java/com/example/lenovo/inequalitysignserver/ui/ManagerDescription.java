@@ -33,6 +33,7 @@ import android.widget.Toast;
 import com.example.lenovo.inequalitysignserver.R;
 import com.example.lenovo.inequalitysignserver.config.ApiConfig;
 import com.example.lenovo.inequalitysignserver.https.Network;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -67,6 +68,7 @@ public class ManagerDescription extends AppCompatActivity {
             }
         }
     };
+    private Network network;
     private View.OnClickListener mOClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -76,10 +78,12 @@ public class ManagerDescription extends AppCompatActivity {
                     break;
                 case R.id.BtnDescriSave:
                     saveDescri2Local();
+                    network = new Network();
+//                    network.postFile(ManagerDescription.this, cropImagePath, ApiConfig.urlBigimg);
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            Network network = new Network();
+
                             NameValuePair pairId = new BasicNameValuePair("id", String.valueOf(ApiConfig.id));
                             NameValuePair pairInform = new BasicNameValuePair("description", inform);
                             result = network.sendJsonAndGet(ApiConfig.urlDescri, pairId, pairInform);
@@ -98,6 +102,7 @@ public class ManagerDescription extends AppCompatActivity {
         }
     };
     private String inform;
+    private String cropImagePath;
 
     private void saveDescri2Local() {
         inform = mEtInform.getText().toString();
@@ -179,15 +184,16 @@ public class ManagerDescription extends AppCompatActivity {
     }
 
     private void getDescri() {
-        Intent i = getIntent();
-        mEtInform.setText(i.getStringExtra("inform"));
-        String bigimg = i.getStringExtra("bigimg");
-
-        if (!bigimg.isEmpty()) {
-            byte []b = Base64.decode(bigimg, Base64.DEFAULT);
-            Bitmap bitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
-            mIvPic.setImageBitmap(bitmap);
+        SharedPreferences spf = getSharedPreferences("ACCOUNT", MODE_APPEND);
+        String bigimg = spf.getString("BIMG", "");
+        String inform = spf.getString("INFORM", "");
+        if (!inform.isEmpty()) {
+            mEtInform.setText(inform);
         }
+        if (!bigimg.isEmpty()) {
+            ImageLoader.getInstance().displayImage(bigimg, mIvPic);
+        }
+
 
     }
 
@@ -245,7 +251,7 @@ public class ManagerDescription extends AppCompatActivity {
                     if (uri == null) {
                         return;
                     }
-                    String cropImagePath = getRealFilePathFromUri(getApplicationContext(), uri);
+                    cropImagePath = getRealFilePathFromUri(getApplicationContext(), uri);
                     Bitmap bitMap = BitmapFactory.decodeFile(cropImagePath);
                     mIvPic.setImageBitmap(bitMap);
 

@@ -27,5 +27,24 @@
             android:gravity="center"
             android:textColor="@android:color/white" />
     </RelativeLayout>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_margin="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:textSize="20sp"
+            android:gravity="center"
+            android:text="扫二维码立即取号"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:layout_margin="20dp"
+            android:id="@+id/IvCode"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
 
 </LinearLayout>

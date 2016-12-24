@@ -36,7 +36,6 @@
         <activity android:name=".ui.CheckActivity" />
         <activity android:name=".ui.ManagerActivity" />
         <activity android:name=".ui.TypeActivity" />
-        <activity android:name=".ui.CallActivity" />
         <activity android:name=".ui.InquiryActivity" />
         <activity android:name=".ui.ManagerNameActivity" />
         <activity android:name=".ui.ManagerAddressActivity" />

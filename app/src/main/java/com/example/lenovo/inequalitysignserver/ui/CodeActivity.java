@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -37,6 +38,7 @@ public class CodeActivity extends AppCompatActivity {
 
         SharedPreferences spf = getSharedPreferences("ACCOUNT", MODE_APPEND);
         String id = spf.getString("ID", "");
+        Log.e("code id", id);
         Bitmap qrCodeBitmap = EncodingUtils.createQRCode(id, 400, 400,logo);
         mIvCode.setImageBitmap(qrCodeBitmap);
     }

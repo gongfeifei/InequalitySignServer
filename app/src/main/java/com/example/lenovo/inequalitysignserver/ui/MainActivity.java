@@ -92,6 +92,8 @@ public class MainActivity extends AppCompatActivity {
 
                 } else if (result.equals("2")) {
                     Toast.makeText(MainActivity.this, "当前没有排队人数~", Toast.LENGTH_SHORT).show();
+                } else if ((result.equals("3"))) {
+                    Toast.makeText(MainActivity.this, "当前所叫号已取消订单~", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(MainActivity.this, "叫号失败~", Toast.LENGTH_SHORT).show();
                 }

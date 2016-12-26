@@ -68,7 +68,6 @@ public class ManagerDescription extends AppCompatActivity {
             }
         }
     };
-    private Network network;
     private View.OnClickListener mOClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -78,12 +77,12 @@ public class ManagerDescription extends AppCompatActivity {
                     break;
                 case R.id.BtnDescriSave:
                     saveDescri2Local();
-                    network = new Network();
+
 
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-
+                            Network network = new Network();
                             NameValuePair pairId = new BasicNameValuePair("id", String.valueOf(ApiConfig.id));
                             NameValuePair pairInform = new BasicNameValuePair("description", inform);
                             result = network.sendJsonAndGet(ApiConfig.urlDescri, pairId, pairInform);
@@ -102,7 +101,6 @@ public class ManagerDescription extends AppCompatActivity {
         }
     };
     private String inform;
-    private String cropImagePath;
 
     private void saveDescri2Local() {
         inform = mEtInform.getText().toString();
@@ -122,7 +120,7 @@ public class ManagerDescription extends AppCompatActivity {
     }
 
     /**
-     * 上传头像
+     * 上传图片
      */
     private void uploadHeadImage() {
         View view = LayoutInflater.from(this).inflate(R.layout.manager_popupwindow, null);
@@ -251,7 +249,7 @@ public class ManagerDescription extends AppCompatActivity {
                     if (uri == null) {
                         return;
                     }
-                    cropImagePath = getRealFilePathFromUri(getApplicationContext(), uri);
+                    final String cropImagePath = getRealFilePathFromUri(getApplicationContext(), uri);
                     Bitmap bitMap = BitmapFactory.decodeFile(cropImagePath);
                     mIvPic.setImageBitmap(bitMap);
 
@@ -267,6 +265,7 @@ public class ManagerDescription extends AppCompatActivity {
                     editor.putString("BIMG", string);
                     editor.commit();
 
+                    Network network = new Network();
                     network.postFile(ManagerDescription.this, cropImagePath, ApiConfig.urlBigimg);
 
                 }

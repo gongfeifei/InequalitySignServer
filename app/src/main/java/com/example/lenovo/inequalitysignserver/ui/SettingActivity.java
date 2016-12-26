@@ -48,6 +48,7 @@ public class SettingActivity extends AppCompatActivity {
                             intent.setClass(SettingActivity.this, LoginActivity.class);
                             startActivity(intent);
                             finish();
+                            UILApplication.flag = 0;
                             ActivityManagerApplication.destoryActivity("MainActivity");
                         }
                     });

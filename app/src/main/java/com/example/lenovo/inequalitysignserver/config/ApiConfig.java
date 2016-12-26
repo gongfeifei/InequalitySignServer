@@ -6,7 +6,7 @@ import android.app.Activity;
  * Created by lenovo on 2016/12/12.
  */
 public class ApiConfig {
-    public static String url = "http://10.7.88.113:8090/shop/";
+    public static String url = "http://123.207.170.123:8090/shop/";
     public static String urlRegister = url + "register";
     public static String urlLogin = url + "login";
     public static String urlPwd = url + "change_shop_pwd";

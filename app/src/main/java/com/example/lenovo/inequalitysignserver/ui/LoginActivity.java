@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.example.lenovo.inequalitysignserver.adapter.DBAdapter;
 import com.example.lenovo.inequalitysignserver.R;
 import com.example.lenovo.inequalitysignserver.config.ApiConfig;
+import com.example.lenovo.inequalitysignserver.config.UILApplication;
 import com.example.lenovo.inequalitysignserver.entity.Account;
 import com.example.lenovo.inequalitysignserver.https.Network;
 
@@ -59,6 +60,7 @@ public class LoginActivity extends AppCompatActivity {
                     ApiConfig.pwd = mEtPwd.getText().toString();
                     editor.commit();
                     startActivity(intent);
+                    UILApplication.flag = 1;
                     finish();
                 }
             }

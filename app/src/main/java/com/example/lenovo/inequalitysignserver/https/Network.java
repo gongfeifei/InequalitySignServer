@@ -158,9 +158,9 @@ public class Network {
                     String result = new String(bytes);
                     Log.e("bytes", result);
                     if (result.equals("1")) {
-                        Toast.makeText(context, "更新成功", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "图片更新成功", Toast.LENGTH_LONG).show();
                     } else if (result.equals("0")) {
-                        Toast.makeText(context, "更新失败", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "图片更新失败", Toast.LENGTH_LONG).show();
                     }
 
                 }

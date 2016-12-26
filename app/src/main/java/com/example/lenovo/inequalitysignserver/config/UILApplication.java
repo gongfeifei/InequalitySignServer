@@ -3,7 +3,10 @@ package com.example.lenovo.inequalitysignserver.config;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 
+import com.example.lenovo.inequalitysignserver.ui.MainActivity;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -18,11 +21,18 @@ import java.util.Set;
  */
 public class UILApplication extends Application {
 
+    public static int flag = 0;
     @Override
     public void onCreate() {
         super.onCreate();
         initImageLoader(getApplicationContext());
+        Log.e("flag", 111 + "");
+        if (flag == 1) {
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
+        }
     }
+
 
     public static void initImageLoader(Context context) {
 

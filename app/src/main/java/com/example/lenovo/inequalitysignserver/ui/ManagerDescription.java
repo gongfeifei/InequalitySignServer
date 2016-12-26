@@ -79,7 +79,7 @@ public class ManagerDescription extends AppCompatActivity {
                 case R.id.BtnDescriSave:
                     saveDescri2Local();
                     network = new Network();
-//                    network.postFile(ManagerDescription.this, cropImagePath, ApiConfig.urlBigimg);
+
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -266,6 +266,8 @@ public class ManagerDescription extends AppCompatActivity {
                     SharedPreferences.Editor editor = spf.edit();
                     editor.putString("BIMG", string);
                     editor.commit();
+
+                    network.postFile(ManagerDescription.this, cropImagePath, ApiConfig.urlBigimg);
 
                 }
                 break;
